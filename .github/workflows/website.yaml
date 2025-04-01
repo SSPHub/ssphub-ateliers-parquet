@@ -35,6 +35,8 @@ jobs:
         run: |
           quarto render --to html
           quarto render tuto/python.qmd --to ipynb
+        env:
+            TOKEN_API_INSEE:  ${{ secrets.TOKEN_API_INSEE }}
       - name: Publish to GitHub Pages
         uses: quarto-dev/quarto-actions/publish@v2
         with:
