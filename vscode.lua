@@ -8,7 +8,7 @@ function createCallout(div, type)
 
     if quarto.doc.is_format("ipynb") then
       if type == "exercise" then
-        type = "tip"
+        type = "callout-tip"
       end
       -- Add html formatting around
       local headBox = "<div class=\"callout callout-style-default callout-" .. type .. " callout-titled\">\n" ..
@@ -45,7 +45,7 @@ function createCallout(div, type)
 
   function Div(div)
     -- List of supported callout types
-    local callout_types = {"note", "caution",  "warning", "important", "tip", "exercise"}
+    local callout_types = {"callout-note", "callout-caution",  "callout-warning", "callout-important", "callout-tip", "exercise"}
 
     for _, type in ipairs(callout_types) do
       if div.classes:includes(type) then
