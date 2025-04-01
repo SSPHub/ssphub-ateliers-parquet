@@ -1,0 +1,15 @@
+project:
+  type: website
+  render:
+    - exercise.qmd
+
+format: html
+
+custom-callout:
+  exercise:
+    icon-symbol: "📝 "
+    color: "pink"
+filters:
+- custom-callout
+
+lang: fr
