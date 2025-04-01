@@ -1,8 +1,46 @@
 ---
-title: "MC API"
+title: "Atelier pour découvrir la récupération de données via des API"
 author: Lino Galiana
 date: 2025-04-09
+description: |
+  Les __API__ (_Application Programming Interface_) sont un mode d'accès aux données en expansion. Grâce aux API, l'automatisation de scripts est facilitée puisqu'il n'est plus nécessaire de stocker un fichier, et gérer ses versions, mais uniquement de requêter une base et laisser au producteur de données le soin de gérer les mises à jour de la base.
+number-sections: true
+image: https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/serveurpython.jpg
 ---
+
+::: {.callout-tip}
+Cet atelier s'inspire fortement du chapitre consacré aux API dans le cours de [_Python pour la data science_](https://pythonds.linogaliana.fr/content/manipulation/04c_API_TP.html) de l'ENSAE. Les principales différences avec celui-ci sont dans la partie relative aux API authentifiées: nous proposons ici l'utilisation d'une API de l'Insee plutôt que de l'INPI.
+:::
+
+
+# Introduction : Qu'est-ce qu'une API ?
+
+Vous êtes certainement habitué à récupérer vos données depuis des fichiers type CSV ou par _webscraping_[^def-webscraping]. Le webscraping est un pis-aller pour accéder à de la donnée.
+
+[^def-webscraping]: Technique consistant à singer le comportement d'un navigateur web et de récupérer de l'information en moissonnant le HTML auquel accède un site web
+
+Heureusement, il existe d'autres manières d'accéder à des données : les API de données. En informatique, une API est un __ensemble de protocoles permettant à deux logiciels de communiquer entre eux__. Par exemple, on parle parfois d'API Pandas ce qui désigne le fait que `Pandas` est une interface entre votre code `Python` et un langage compilé plus efficace (`C`) qui fait les calculs que vous demandez au niveau de `Python`. L’objectif d’une API est ainsi de fournir un point d’accès à une fonctionnalité qui soit facile à utiliser et qui masque les détails de la mise en oeuvre.
+
+Dans ce chapitre, nous nous intéressons principalement aux API de données. Ces dernières sont simplement une façon de mettre à disposition des données : plutôt que de laisser l’utilisateur consulter directement des bases de données (souvent volumineuses et complexes), l’API lui propose de formuler une requête qui est traitée par le serveur hébergeant la base de données, puis de recevoir des données en réponse à sa requête.
+
+L'utilisation accrue d'API dans le cadre de stratégies open-data est l'un
+des piliers des 15 feuilles de route ministérielles françaises
+en matière d’ouverture, de circulation et de valorisation des données publiques.
+
+:::: {.callout-tip collapse="false"}
+## Illustration avec l'API BAN
+
+Pour illustrer ceci, imaginons ce qu'il se passe lorsque, dans la suite du chapitre, nous ferons des requêtes à l'API BAN.
+
+* 💬 Via `Python` {{< fa brands python >}}, on envoie notre commande à celle-ci: des adresses plus ou moins complètes avec des instructions annexes comme le code commune. Ces instructions annexes peuvent s'apparenter à des informations fournies au serveur du restaurant comme des interdits alimentaires qui vont personnaliser la recette.
+
+* 🧑‍🍳 A partir de ces instructions, le plat est lancé. En l'occurrence, il s'agit de faire tourner sur les serveurs d'Etalab une routine qui va chercher dans un référentiel d'adresse celle qui est la plus similaire à celle qu'on a demandé en adaptant éventuellement en fonction des instructions annexes qu'on a fourni.
+
+* 🍕 Une fois que côté cuisine on a fini cette préparation, on renvoie le plat au client. En l'occurrence, le plat sera des coordonnées géographiques qui correspondent à l'adresse la plus similaire.
+
+Le client n'a donc qu'à se préoccuper de faire une bonne requête et d'apprécier le plat qui lui est fourni. L'intelligence dans la mise en oeuvre est laissée aux spécialistes qui ont conçu l'API. Peut-être que d'autres spécialistes, par exemple _Google Maps_, mettent en oeuvre une recette différente pour ce même plat (des coordonnées géographiques) mais ils vous proposeront probablement un menu très similaire. Ceci vous simplifie beaucoup la vie: il vous suffit de changer quelques lignes de code d'appel à une API plutôt que de modifier un ensemble long et complexe de méthodes d'identification d'adresses.
+
+::::
 
 
 # Découverte des concepts principaux avec l'API BAN
@@ -12,6 +50,13 @@ Une API a donc vocation à servir d'intermédiaire entre un client et un serveur
 ## Comprendre le principe avec un exemple interactif
 
 Le premier mode (accès par un navigateur) est principalement utilisé lorsqu'une interface web permet à un utilisateur de faire des choix afin de lui renvoyer des résultats correspondant à ceux-ci. Prenons à nouveau l'exemple de l'API de géolocalisation que nous utiliserons dans ce chapitre. Imaginons une interface web permettant à l'utilisateur deux choix: un code postal et une adresse. Cela sera injecté dans la requête et le serveur répondra avec la géolocalisation adaptée.
+
+::: {.content-hidden when-format="ipynb"}
+Une démonstration interactive est disponible sur XXXXX
+:::
+
+
+::: {.content-hidden when-format="html"}
 
 
 :::: {.columns}
@@ -66,7 +111,7 @@ map = {
 }
 ```
 
-Allons voir ce que cela donne dans l'onglet `Réseau` des outils de développement de notre navigateur: <kbd>CTRL</kbd>+<kbd>MAJ</kbd>+<kbd>K</kbd>
+🔎 Allons voir ce que cela donne dans l'onglet `Réseau` des outils de développement de notre navigateur (dans `firefox`, raccourci {{< fa brands firefox >}} <kbd>CTRL</kbd>+<kbd>MAJ</kbd>+<kbd>K</kbd>).
 
 
 ```{ojs}
@@ -77,16 +122,21 @@ html`
 `
 ```
 
-Ce qui nous donne un output au format JSON, le format de sortie d'API le plus commun.
+Ce qui nous donne un output au format _JSON_, le format de sortie d'API le plus commun.
 
-Si on veut un beau rendu, comme la carte ci-dessus, il faudra que le navigateur retravaille cet output, ce qui se fait normalement avec `Javascript`, le langage de programmation embarqué par les navigateurs.
+Si on veut un beau rendu, comme la carte ci-dessus, il faudra que le navigateur retravaille cet _output_, ce qui se fait normalement avec `Javascript`, le langage de programmation embarqué par les navigateurs.
+
+:::
 
 
-## Comment faire avec `Python` ?
+
+
+
+## Comment faire avec `Python` {{< fa brands python >}} ?
 
 Le principe est le même sauf que nous perdons l'aspect interactif. Il s'agira donc, avec `Python`, de construire l'URL voulue et d'aller chercher via une requête HTTP le résultat.
 
-`Python` communique avec internet: via le _package_ `requests`. Ce _package_ suit le protocole HTTP où on retrouve principalement deux types de requêtes: `GET` et `POST`:
+`Python` communique avec internet: via le **_package_ `requests`**. Ce _package_ suit le protocole HTTP où on retrouve principalement deux types de requêtes: `GET` et `POST`:
 
 * La requête `GET` est utilisée pour récupérer des données depuis un serveur web. C'est la méthode la plus simple et courante pour accéder aux ressources d'une page web. Nous allons commencer par décrire celle-ci.
 * La requête `POST` est utilisée pour envoyer des données au serveur, souvent dans le but de créer ou de mettre à jour une ressource. Sur les pages web, elle sert souvent à la soumission de formulaires qui nécessitent de mettre à jour des informations sur une base (mot de passe, informations clients, etc.). Nous verrons son utilité plus tard, lorsque nous commencerons à rentrer dans les requêtes authentifiées où il faudra soumettre des informations supplémentaires à notre requête.
@@ -102,7 +152,7 @@ url_ban_example = f"https://api-adresse.data.gouv.fr/search/?q={adresse.replace(
 requests.get(url_ban_example)
 ```
 
-Qu'est-ce qu'on obtient ? Un code HTTP. Le code 200 correspond aux requêtes réussies, c'est-à-dire pour lesquelles le serveur est en mesure de répondre. Si ce n'est pas le cas, pour une raison _x_ ou _y_, vous aurez un code différent.
+Qu'est-ce qu'on obtient ? Un __code HTTP__. Le code 200 correspond aux requêtes réussies, c'est-à-dire pour lesquelles le serveur est en mesure de répondre. Si ce n'est pas le cas, pour une raison _x_ ou _y_, vous aurez un code différent.
 
 ::: {.callout-tip collapse="true"}
 ## Les codes HTTP
@@ -125,19 +175,49 @@ Pour récupérer le contenu renvoyé par `requests`, il existe plusieurs méthod
 ```{python}
 #| echo: true
 #| label: ban-example-json
+#| output: false
 req = requests.get(url_ban_example)
 localisation_insee = req.json()
 localisation_insee
 ```
 
+```{python}
+#| echo: false
+ojs_define(localisation_insee = localisation_insee)
+```
+
+::: {.content-hidden when-format="html"}
+
+```{ojs}
+//| echo: false
+localisation_insee
+```
+
+:::
+
 En l'occurrence, on voit que les données sont dans un JSON imbriqué. Il faut donc développer un peu de code pour récupérer les informations voulues dans celui-ci:
 
 ```{python}
 #| echo: true
+#| output: false
 localisation_insee.get('features')[0].get('properties')
 ```
 
-C'est là l'inconvénient principal de l'usage des API: le travail _ex post_ sur les données renvoyées. Le code nécessaire est propre à chaque API puisque l'architecture du JSON dépend de chaque API.
+```{python}
+#| echo: false
+ojs_define(localisation_insee2 = localisation_insee.get('features')[0].get('properties'))
+```
+
+::: {.content-hidden when-format="html"}
+
+```{ojs}
+//| echo: false
+localisation_insee2
+```
+
+:::
+
+C'est là l'inconvénient principal de l'usage des API: le travail _ex post_ sur les données renvoyées est parfois important. Le code nécessaire est propre à chaque API puisque l'architecture du JSON dépend de chaque API.
 
 
 ## Comment connaître les _inputs_ et _outputs_ des API ?
@@ -147,7 +227,7 @@ Mais comment faire, en pratique, pour en arriver là ? Tout simplement en lisant
 
 Les bonnes API proposent un outil interactif qui s'appelle le [`swagger`](https://swagger.io/docs/). C'est un site web interactif où sont décrites les principales fonctionnalités de l'API et où l'utilisateur peut tester des exemples interactivement. Ces documentations sont souvent créées automatiquement lors de la construction d'une API et mises à disposition par le biais d'un point d'entrée `/docs`. Elles permettent souvent d'éditer certains paramètres dans le navigateur, voir le JSON obtenu (ou l'erreur générée) et récupérer la requête formattée qui permet d'obtenir celui-ci. Ces consoles interactives dans le navigateur permettent de répliquer le tâtonnement qu'on peut faire par ailleurs dans des outils spécialisés comme [`postman`](https://www.postman.com/).
 
-Concernant l'API BAN, la documentation se trouve sur <https://adresse.data.gouv.fr/api-doc/adresse>. Elle n'est pas interactive, malheureusement. Mais elle présente de nombreux exemples qui peuvent être testés directement depuis le navigateur. Il suffit d'utiliser les URL proposées comme exemple. Ceux-ci sont présentés par le biais de `curl` (un équivalent de `requests` en ligne de commande Linux):
+Concernant l'API BAN, la documentation se trouve sur <https://adresse.data.gouv.fr/api-doc/adresse>. Elle n'est pas interactive, malheureusement. Mais elle présente de nombreux exemples qui peuvent être testés directement depuis le navigateur. Il suffit d'utiliser les URL proposées comme exemple. Ceux-ci sont présentés par le biais de `curl` (un équivalent de `requests` en ligne de commande Linux {{< fa brands linux >}}):
 
 ```{.python}
 curl "https://api-adresse.data.gouv.fr/search/?q=8+bd+du+port&limit=15"
@@ -157,6 +237,8 @@ Il suffit de copier l'URL en question (`https://api-adresse.data.gouv.fr/search/
 
 
 ## Application
+
+Pour la prochaine application, nous allons utiliser l'adresse suivante:
 
 ```{python}
 #| echo: true
@@ -168,8 +250,8 @@ adresse = "88 Avenue Verdier"
 ## Exercice 1: Structurer un appel à une API depuis `Python`
 
 1. Tester sans aucun autre paramètre, le retour de notre API. Transformer en `DataFrame` le résultat.
-2. Se restreindre à Montrouge avec le paramètre _ad hoc_ et la recherche du code insee ou code postal adéquat sur google.
-3. (Optionnel): Représenter l'adresse trouvée sur une carte
+2. Se restreindre à Montrouge avec le paramètre _ad hoc_ et la recherche du code insee ou code postal adéquat sur _Google_.
+3. (Optionnel): Représenter l'adresse trouvée sur une carte.
 :::
 
 
@@ -193,6 +275,7 @@ df_avenue_verdier = pd.DataFrame(
 Les deux premières lignes du _dataframe_ obtenu à la question 1 devraient être
 
 ```{python}
+#| echo: false
 df_avenue_verdier.head(2)
 ```
 
@@ -289,6 +372,8 @@ WHERE DEP = '31'
 
 bpe = duckdb.sql(query)
 bpe = bpe.to_df()
+
+bpe.head(2)
 ```
 
 ## Récupérer des données à façon grâce aux API
@@ -350,7 +435,7 @@ C'est mieux, mais nous avons toujours seulement 10 observations. Si on essaie d'
 #| code-summary: "Question 3"
 url_31_limite200 = "https://data.education.gouv.fr/api/explore/v2.1/catalog/datasets/fr-en-annuaire-education/records?where=code_departement%20like%20%22031%22&limit=200"
 
-requests.get(url_31_limite200).content
+requests.get(url_31_limite200).json()
 ```
 
 Essayons avec des données plus exhaustives : le fichier brut sur `data.gouv`. Comme on peut le voir dans les métadonnées, on sait qu'on a plus de 1000 écoles dont on peut récupérer des données, mais qu'on en a ici extrait seulement 20. Le champ `next` nous donne directement l'URL à utiliser pour récupérer les 20 pages suivantes : c'est grâce à lui qu'on a une chance de récupérer toutes nos données d'intérêt.
@@ -463,16 +548,416 @@ Nous avions `requests.get`, il est donc logique que nous ayons `requests.post`. 
 Le principal défi, illustré dans le prochain exercice, est le passage de l'argument `data`: il faudra renvoyer le fichier comme un objet `Python` par le biais de la fonction `open`.
 
 
+::: {.exercise}
+## Exercice 3: une requête `POST` pour géolocaliser en masse nos données
+
+1. Enregistrer au format CSV les colonnes `adresse`, `DEPCOM` et `Nom_commune` de la base d'équipements fusionnée avec notre répertoire précédent (objet `bpe_enriched`). Il peut être utile, avant l'écriture au format CSV, de remplacer les virgules dans la colonne `adresse` par des espaces.
+2. Créer l'objet `response` avec `requests.post` et les bons arguments pour géocoder votre CSV.
+3. Transformer votre output en objet `Pandas` avec la commande suivante:
+
+```{.python}
+bpe_loc = pd.read_csv(io.StringIO(response.text))
+```
+
+:::
+
+```{python}
+#| label: exercise3-q1
+#| code-fold: true
+#| code-summary: "Réponse question 1"
+
+import pathlib
+output_path = pathlib.Path("data/output")
+output_path.mkdir(parents=True, exist_ok=True)
+csv_file = output_path / "bpe_before_geoloc.csv"
+
+bpe_enriched["adresse"] = bpe_enriched["adresse"].str.replace(",", "")
+
+bpe_enriched.loc[:, ["adresse", "DEPCOM", "Nom_commune"]].to_csv(csv_file)
+```
+
+```{python}
+#| code-fold: true
+#| code-summary: "Réponse question 2 et 3"
+
+import io
+
+params = {
+    "columns": ["adresse", "Nom_commune"],
+    "citycode": "DEPCOM",
+    "result_columns": ["result_score", "latitude", "longitude"],
+}
+
+response = requests.post(
+        "https://api-adresse.data.gouv.fr/search/csv/",
+        data=params,
+        files={"data": open(csv_file, "rb")},
+    )
+
+
+bpe_loc = pd.read_csv(io.StringIO(response.text))
+bpe_loc = bpe_loc.rename({"Unnamed: 0": "index"}, axis = "columns")
+```
+
+Les géolocalisations obtenues prennent cette forme
+
+```{python}
+#| echo: false
+bpe_loc.head(2)
+```
+
+On peut ensuite faire la jointure à nos données initiales:
+
+```{python}
+#| label: exercise3-q2
+#| code-fold: true
+#| code-summary: "Jointure aux données initiales"
+bpe_loc = bpe_loc.loc[:, ["index", "result_score", "latitude", "longitude"]]
+bpe_enriched_geocoded = (
+  bpe_enriched
+  .reset_index()
+  .merge(bpe_loc, on = "index", suffixes = ["_annuaire", "_ban"])
+  .drop("index", axis = "columns")
+)
+
+bpe_enriched_geocoded.head(2)
+```
+
+```{python}
+#| label: exercise3-q3
+#| code-fold: true
+#| code-summary: "Jointure aux données initiales"
+
+bpe_enriched_geocoded = (
+    bpe_enriched_geocoded
+    .dropna(subset=["longitude_ban","latitude_ban"])
+)
+
+bpe_enriched_geocoded = gpd.GeoDataFrame(
+    bpe_enriched_geocoded,
+    geometry=gpd.points_from_xy(
+      bpe_enriched_geocoded['longitude_ban'],
+      bpe_enriched_geocoded['latitude_ban']
+      ),
+    crs="EPSG:4326"
+)
+```
+
+
+Pour profiter de nos données enrichies, on peut faire une carte. Pour ajouter un peu de contexte à celle-ci, on peut mettre un fond de carte des communes en arrière plan. Celui-ci peut être récupéré avec `cartiflette`:
+
+
+```{python}
+#| echo: true
+#| label: carti-download
+#| code-fold: true
+#| code-summary: "Récupération du fond de carte (GEOJSON)"
+from cartiflette import carti_download
+shp_communes = carti_download(
+  crs = 4326,
+  values = ["31"],
+  borders="COMMUNE",
+  vectorfile_format="topojson",
+  filter_by="DEPARTEMENT",
+  source="EXPRESS-COG-CARTO-TERRITOIRE",
+  year=2022
+)
+shp_communes.crs = 4326
+```
+
+
+```{python}
+#| label: cartiflette-map
+#| code-fold: true
+#| code-summary: "Code pour la carte interactive"
+import folium
+from folium.plugins import MarkerCluster
+import geopandas as gpd
+
+department_border = shp_communes.dissolve(by="INSEE_DEP")
+city_borders = shp_communes.copy()
+
+longitude = bpe_enriched_geocoded.geometry.x.iloc[0]
+latitude = bpe_enriched_geocoded.geometry.y.iloc[0]
+m = folium.Map(location=[latitude, longitude], zoom_start=10)
+
+# Add department border (black, bold)
+folium.GeoJson(
+    data=department_border,
+    style_function=lambda x: {
+        "fill": False,
+        "color": "black",
+        "weight": 3  # Bold border
+    }
+).add_to(m)
+
+# Add city borders (blue, thin)
+folium.GeoJson(
+    data=city_borders,
+    style_function=lambda x: {
+        "fill": False,
+        "color": "blue",
+        "weight": 1  # Thin border
+    }
+).add_to(m)
+
+# Initialize the MarkerCluster
+marker_cluster = MarkerCluster().add_to(m)
+
+def generate_popup(row):
+    # Initialiser le contenu avec le nom de l'école
+    popup_content = f"<b>Nom:</b> {row['NOMRS']}<br>"
+
+    # Ajouter "Ecole élémentaire" avec une icône ✅️ ou ❌️ selon la valeur
+    ecole_element_status = "✅️" if row.get('Ecole_elementaire', False) else "❌️"
+    popup_content += f"<b>Ecole élémentaire:</b> {ecole_element_status}<br>"
+
+    # Ajouter "Nombre d'élèves" si disponible
+    if not pd.isnull(row.get('Nombre_d_eleves')):
+        popup_content += f"<b>Nombre d'élèves:</b> {row['Nombre_d_eleves']}<br>"
+
+    # Ajouter "Voie générale" si disponible
+    if not pd.isnull(row.get('Voie_generale')):
+        popup_content += f"<b>Voie générale:</b> {row['Voie_generale']}<br>"
+
+    # Ajouter "Voie technologique" si disponible
+    if not pd.isnull(row.get('Voie_technologique')):
+        popup_content += f"<b>Voie technologique:</b> {row['Voie_technologique']}<br>"
+
+    return popup_content
+
+
+# Add GeoDataFrame points to the MarkerCluster
+for _, row in bpe_enriched_geocoded.iterrows():
+    # Create the popup content
+    popup_content = generate_popup(row)
+
+    popup = folium.Popup(popup_content, max_width=300)
+
+    # Add the marker to the cluster
+    folium.Marker(
+        location=[row.geometry.y, row.geometry.x],  # Extract latitude and longitude
+        popup=popup,
+        icon=folium.Icon(color="blue", icon="info-sign")
+    ).add_to(marker_cluster)
+
+# Display the map inline (optional for Jupyter Notebooks)
+m
+```
+
+# Gestion des secrets et des exceptions
+
+Nous avons déjà utilisé plusieurs API. Néanmoins ces dernières étaient toutes sans authentification et présentent peu de restrictions, hormis le nombre d'échos. Ce n'est pas le cas de toutes les API. Il est fréquent que les API qui permettent d'aspirer plus de données ou d'accéder à des données confidentielles nécessitent une authentification pour tracer les utilisateurs de données.
+
+Cela se fait généralement par le biais d'un _token_. Ce dernier est une sorte de mot de passe, souvent utilisé dans les systèmes modernes d'authentification pour certifier de l'identité d'un.e utilisateur.trice (cf. [chapitre `Git`](/content/git/introgit.qmd)).
+
+Pour illustrer l'usage des _tokens_, nous allons utiliser une API de l'INPI (Institut national de la protection intellectuelle). Les API développées par cette organisation nécessitent en effet une authentification. Nous allons utiliser cette API pour récupérer des documents PDF issus des comptes sociaux des entreprises.
+
+Avant d'en arriver là, nous allons faire un aparté sur la confidentialité des tokens et la manière d'éviter de révéler ceux-ci dans votre code.
+
+## Bonnes pratiques pour utiliser un token dans un code sans le révéler 👮
+
+Les _tokens_ sont des informations personnelles qui ne doivent pas être partagées. Ils n'ont pas vocation à être présent dans le code.
+
+Comme ceci est évoqué à plusieurs reprises dans le cours de [mise en production](https://ensae-reproductibilite.github.io/website/) en 3e année de l'ENSAE, il est important de séparer le code des éléments de configuration:
+
+![](https://pythonds.linogaliana.fr/content/modern-ds/environment.png)
+
+L'idée est de trouver une recette pour apporter les éléments de configuration avec le code mais sans mettre ceux-ci en clair dans le code. L'idée générale sera de stocker la valeur du _token_ dans une variable mais ne jamais révéler celle-ci dans le code. Comment faire dès lors pour déclarer la valeur du jeton sans que celui-ci soit apparent dans le code ?
+
+* Pour un code amené à fonctionner de manière interactive (par exemple par le biais d'un _notebook_), il est possible de créer une boite de dialogue qui injectera la valeur renseignée dans une variable. Cela se fait par le biais du package `getpass`.
+* Pour le code qui tourne en non interactif, par exemple par le biais de la ligne de commande, l'approche par variable d'environnement est la plus fiable, à condition de faire attention à ne pas mettre le fichier de mot de passe dans `Git` {{< fa brands git-alt >}}. Pour cela, le plus simple est d'utiliser [`dotenv`](https://pypi.org/project/python-dotenv/) si vous faites tourner votre code ou des [secrets](https://docs.github.com/fr/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions) si votre code tourne par le biais de l'intégration continue[^gha].
+
+[^gha]: C'est par exemple l'approche adoptée pour construire ces supports. Cela se fait de [cette manière](XXXX).
+
+::: {.important}
+Il ne faut jamais mettre de _token_ dans `Git`. Sinon, vous courrez le risque d'avoir votre identité usurpée : des robots scannent en continu  `Github` à la recherche de jetons pour ensuite lancer des dénis de service vous identifiant vous.
+
+Si vous avez, par erreur, partagé un jeton: pas de panique, cela peut arriver ! L'avantage des jetons est qu'ils sont révocables: vous pouvez l'invalider et en créer un nouveau pour continuer à utiliser le service désiré. La meilleure parade pour éviter cela est d'ajouter tout de suite le `.env` au `.gitignore`.
+:::
+
+
+L'exercice 5 permettra de mettre en oeuvre ces deux méthodes. Ces méthodes nous serviront à ajouter de manière confidentielle un _payload_ à des requêtes d'authentification, c'est-à-dire des informations confidentielles identifiantes en complément d'une requête.
+
+
+## Le portail des API de l'Insee
+
+Pour illustrer l'utilisation des API authentifiées, nous proposons d'explorer le [portail des API](https://api.insee.fr/catalogue/) de l'Insee.
+
+Nous allons nous concentrer sur l'API Sirene mais, sur ce portail, il en existe d'autres, notamment l'API Melodi consacrée à la récupération d'un certain nombre de sources _open data_ de l'Insee. L'API Sirene est une version interrogeable des données [Sirene _open data_](https://www.insee.fr/fr/information/3591226).
+
+
+
+
+::: {.exercise}
+## Exercice 4: API authentifiée par le biais du navigateur {.unnumbered}
+
+1. Se créer un compte sur le [portail des API](https://api.insee.fr/catalogue/)
+2. Aller voir l'espace `Mes applications` et en créer une nouvelle. Par simplicité, vous pouvez la nommer _"Atelier SSPHub"_.
+3. Dans celle-ci, aller dans l'onglet _"Clefs et jetons"_.Créer un jeton (vous pouvez laisser la validité proposée).
+4. Cliquer sur l'onglet _Souscriptions_. Choisir l'API Sirene.
+5. A droite, sélectionner l'application créée précédemment. Si vous allez voir votre application, elle devrait maintenant pouvoir interagir avec l'API Sirene.
+
+Testons maintenant l'API Sirene grâce au _swagger_:
+
+6. Plus bas, dans la documentation interactive se rendre au point d'entrée `/siren/{siren}` (méthode `GET`).
+7. Remplir le champ `q` avec le SIREN `500569405` (SIREN de décathlon 😉)
+8. Si vous avez l'erreur ci-dessous, comprenez-vous pourquoi ?
+
+::: {.content-hidden when-format="html"}
+
+```{ojs}
+//| echo: false
+error_request_no_token
+```
+
+:::
+
+1. Changer l'application via le menu déroulant: maintenant que vous avez un _token_ valide, réessayer
+
+Vous devriez maintenant avoir cette sortie:
+
+```{ojs}
+//| echo: false
+sortie_sirene_decathlon
+```
+
+:::
+
+## Récupération des données via `Python` {{< fa brands python >}}
+
+Pour la prochaine application, à partir de la question 4, nous allons avoir besoin de créer une classe spéciale permettant à `requests` de surcharger notre requête d'un jeton d'authentification. Comme elle n'est pas triviale à créer sans connaissance préalable, la voici:
+
+```{python}
+#| echo: true
+#| label: bearer-token
+class BearerAuth(requests.auth.AuthBase):
+    def __init__(self, token):
+        self.token = token
+    def __call__(self, r):
+        r.headers["authorization"] = "Bearer " + self.token
+        return r
+```
+
+
+::: {.exercise}
+## Exercice 5: les tokens avec `Python`
+
+1. Créer une variable `token` par le biais de `getpass`.
+2. Utiliser cette structure de code pour récupérer la donnée voulue
+
+```{.python}
+requests.get(
+    url,
+    auth=BearerAuth(token)
+)
+```
+
+3. Remplacer l'utilisation de `getpass` par l'approche variable d'environnement grâce à [`dotenv`](https://pypi.org/project/python-dotenv/).
+
+:::
+
+
+```{python}
+#| code-fold: true
+#| code-summary: "Correction de l'exercice"
+#| output: false
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+siren="500569405"
+token = os.getenv("TOKEN_API_INSEE")
+
+r = requests.get(
+    f"https://api.insee.fr/entreprises/sirene/V3.11/siren/{siren}",
+    auth=BearerAuth(token)
+)
+
+sortie_sirene_decathlon = r.json()
+sortie_sirene_decathlon
+```
+
+::: {.content-visible when-format="html"}
+
+```{python}
+#| echo: false
+ojs_define(sortie_sirene_decathlon = sortie_sirene_decathlon)
+```
+
+```{ojs}
+//| echo: false
+sortie_sirene_decathlon
+```
+
+:::
+
+Nous avons un _dataframe_ avec de nombreux _SIRET_ (`bpe`). On pourrait vouloir récupérer des infos sur ceux-ci par le biais de l'API. Néanmoins les conditions d'usage de celle-ci sont restrictives: pas plus de 30 appels par minute.
+
+On ne peut donc faire une boucle sur notre _dataframe_ sans contrôler le nombre d'appels à la minute. Idéalement, nous ferions de l'envoi par _bash_ qui permet d'envoyer plusieurs enregistrement à la fois dans une seule requête (comme nous avons fait pour les géolocalisations) mais ce n'est pas possible: l'API Sirene est une API pour de la consultation de données ponctuelles, pas du traitement statistique sur de gros volumes.
+
+L'autre approche possible, que nous allons adopter, est de mettre un temps d'attente entre chaque appel à l'API. Nous allons donc faire une boucle mais, entre chaque itération, mettre un temps de repos de 2 secondes.
+
+
+```{python}
+#| code-fold: true
+#| code-summary: Fonction utile pour cet exercice
+#| output: false
+siret = "21310001900024"
+
+def get_ape(siret: str = "21310001900024", token: str = ""):
+    info_siret = requests.get(
+        f"https://api.insee.fr/entreprises/sirene/V3.11/siret/{siret}",
+        auth=BearerAuth(token)
+    ).json()
+    ape = (info_siret
+        .get("etablissement", {})
+        .get("uniteLegale", {})
+        .get("activitePrincipaleUniteLegale", {})
+    )
+    return ape
+
+get_ape(siret, token)
+```
+
+
+::: {.exercise}
+## Exercice 6: généraliser des appels à des API
+
+Nous voulons récupérer l'activité pricnipal de nos établissements (le code APE, qui devrait normalement être `84.11Z`).
+
+Utiliser le _package_ `time` et sa fonction `sleep` pour marquer un temps d'arrêt lorsqu'on itére sur les _dix premières observations_ de notre _dataframe_ pour récupérer ce code.
+
+:::
+
+
+
+```{python}
+#| code-fold: true
+#| code-summary: "Correction de l'exercice"
+import time
+
+first_siret = []
+
+for index, row in bpe.head(10).iterrows():
+    first_siret += [get_ape(row['SIRET'], token)]
+    time.sleep(2)
+```
+
+::: {.content-visible when-format="html"}
+
 <!----------
 API interactive example
 ---------->
+
+
 
 ```{ojs}
 //| echo: false
 //| output: false
 adresse_debounce = debounce(viewof adresse, 3000)
 ```
-
 
 ```{ojs}
 //| echo: false
@@ -526,4 +1011,15 @@ latitude = localisation.features[0].geometry.coordinates[1]
 ```{ojs}
 //| echo: false
 import {L} from "@observablehq/hello-leaflet"
+```
+
+:::
+
+```{python}
+#| echo: false
+error_request_no_token = requests.get(
+    f"https://api.insee.fr/entreprises/sirene/V3.11/siren/",
+    headers={"Accept": "application/json"}
+).json()
+ojs_define(error_request_no_token=error_request_no_token)
 ```

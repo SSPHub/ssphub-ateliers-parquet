@@ -1,15 +1,34 @@
 project:
   type: website
   render:
-    - exercise.qmd
-
-format: html
+    - index.qmd
+    - sessions/api.qmd
 
 custom-callout:
   exercise:
     icon-symbol: "📝 "
     color: "pink"
+
 filters:
-- custom-callout
+  - custom-callout
+  - "vscode.lua"
 
 lang: fr
+
+website:
+  title: "Atelier du `SSPHub`"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: "sessions/api.qmd"
+        text: API
+
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    code-annotations: hover
+    code-link: true

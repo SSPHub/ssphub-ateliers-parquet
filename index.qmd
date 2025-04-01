@@ -1,0 +1,19 @@
+---
+title: "_Masterclass_ du `SSPHub`"
+listing:
+  id: sample-listings
+  contents:
+    - "sessions/*.qmd"
+  sort: "date"
+  type: grid
+---
+
+Site web en construction
+
+
+::: {#sample-listings}
+:::
+
+## _Replays_ des sessions
+
+A venir
