@@ -909,6 +909,7 @@ L'autre approche possible, que nous allons adopter, est de mettre un temps d'att
 #| code-fold: true
 #| code-summary: Fonction utile pour cet exercice
 #| output: false
+#| eval: false
 siret = "21310001900024"
 
 def get_ape(siret: str = "21310001900024", token: str = ""):
