@@ -951,6 +951,19 @@ for index, row in bpe.head(10).iterrows():
     time.sleep(2)
 ```
 
+## Conclusion
+
+Les API sont pratiques pour récupérer des données ponctuelles, en particulier lorsque le consommateur de données n’a pas besoin d’accéder à la donnée brute mais plutôt à une version déjà transformée, filtrée ou mise à jour dynamiquement. Elles s’intègrent bien dans des applications interactives ou des scripts automatisés et permettent de déléguer la gestion des mises à jour et de la volumétrie au fournisseur de données.
+
+Cependant, leur utilisation présente plusieurs inconvénients :
+
+* elles nécessitent souvent un code très spécifique à chaque source et à chaque langage, ce qui nuit à la portabilité (à l’inverse de solutions plus universelles comme SQL, dont nous parlerons dans la _masterclass_ `Parquet`) ;
+
+* elles posent parfois des limites en termes de volumétrie ou de stabilité d’accès (API désactivées ou restructurées sans préavis), ce qui les rend moins adaptées pour un usage massif ou reproductible à long terme.
+
+Les API sont donc surtout intéressantes pour récupérer des données ponctuelles ou embarquées dans une application, mais restent à manier avec prudence dans un contexte d’exploitation de données à grande échelle ou de production statistique robuste.
+
+
 ::: {.content-visible when-format="html"}
 
 <!----------
@@ -1032,6 +1045,3 @@ ojs_define(error_request_no_token=error_request_no_token)
 ```
 
 
-## Conclusion
-
-TODO
