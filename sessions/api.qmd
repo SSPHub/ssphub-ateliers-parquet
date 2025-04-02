@@ -124,6 +124,7 @@ html`
 `
 ```
 
+
 Ce qui nous donne un output au format _JSON_, le format de sortie d'API le plus commun.
 
 Si on veut un beau rendu, comme la carte ci-dessus, il faudra que le navigateur retravaille cet _output_, ce qui se fait normalement avec `Javascript`, le langage de programmation embarqué par les navigateurs.
