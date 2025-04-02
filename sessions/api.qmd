@@ -941,6 +941,7 @@ Utiliser le _package_ `time` et sa fonction `sleep` pour marquer un temps d'arr√
 ```{python}
 #| code-fold: true
 #| code-summary: "Correction de l'exercice"
+#| eval: false
 import time
 
 first_siret = []
