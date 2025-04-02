@@ -249,7 +249,7 @@ adresse = "88 Avenue Verdier"
 ```
 
 ::: {.exercise}
-## Exercice 1: Structurer un appel à une API depuis `Python`
+## Exercice 1: Structurer un appel à une API depuis `Python` {.unnumbered}
 
 1. Tester sans aucun autre paramètre, le retour de notre API. Transformer en `DataFrame` le résultat.
 2. Se restreindre à Montrouge avec le paramètre _ad hoc_ et la recherche du code insee ou code postal adéquat sur _Google_.
@@ -386,7 +386,7 @@ L'exercice suivant viendra illustrer l'intérêt d'utiliser une API pour avoir d
 
 
 ::: {.exercise}
-## Exercice 2
+## Exercice 2 {.unnumbered}
 
 1. Visiter le _swagger_ de l'API de l'Annuaire de l'Education nationale sur [api.gouv.fr/documentation](https://api.gouv.fr/documentation/api-annuaire-education) et tester une première récupération de données en utilisant le _endpoint_ `records` sans aucun paramètre.
 2. Puisqu'on n'a conservé que les données de la Haute Garonne dans notre base principale, on désire ne récupérer que les établissements de ce département par le biais de notre API. Faire une requête avec le paramètre _ad hoc_, sans en ajouter d'autres.
@@ -551,7 +551,7 @@ Le principal défi, illustré dans le prochain exercice, est le passage de l'arg
 
 
 ::: {.exercise}
-## Exercice 3: une requête `POST` pour géolocaliser en masse nos données
+## Exercice 3: une requête `POST` pour géolocaliser en masse nos données {.unnumbered}
 
 1. Enregistrer au format CSV les colonnes `adresse`, `DEPCOM` et `Nom_commune` de la base d'équipements fusionnée avec notre répertoire précédent (objet `bpe_enriched`). Il peut être utile, avant l'écriture au format CSV, de remplacer les virgules dans la colonne `adresse` par des espaces.
 2. Créer l'objet `response` avec `requests.post` et les bons arguments pour géocoder votre CSV.
@@ -842,7 +842,7 @@ class BearerAuth(requests.auth.AuthBase):
 
 
 ::: {.exercise}
-## Exercice 5: les tokens avec `Python`
+## Exercice 5: les tokens avec `Python` {.unnumbered}
 
 1. Créer une variable `token` par le biais de `getpass`.
 2. Utiliser cette structure de code pour récupérer la donnée voulue
@@ -928,7 +928,7 @@ get_ape(siret, token)
 
 
 ::: {.exercise}
-## Exercice 6: généraliser des appels à des API
+## Exercice 6: généraliser des appels à des API {.unnumbered}
 
 Nous voulons récupérer l'activité pricnipal de nos établissements (le code APE, qui devrait normalement être `84.11Z`).
 
@@ -951,7 +951,7 @@ for index, row in bpe.head(10).iterrows():
     time.sleep(2)
 ```
 
-## Conclusion
+# Conclusion
 
 Les API sont pratiques pour récupérer des données ponctuelles, en particulier lorsque le consommateur de données n’a pas besoin d’accéder à la donnée brute mais plutôt à une version déjà transformée, filtrée ou mise à jour dynamiquement. Elles s’intègrent bien dans des applications interactives ou des scripts automatisés et permettent de déléguer la gestion des mises à jour et de la volumétrie au fournisseur de données.
 
