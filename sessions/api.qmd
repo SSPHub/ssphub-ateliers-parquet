@@ -8,10 +8,12 @@ number-sections: true
 image: https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/serveurpython.jpg
 ---
 
-::: {.callout-tip}
+::: {.tip}
 Cet atelier s'inspire fortement du chapitre consacré aux API dans le cours de [_Python pour la data science_](https://pythonds.linogaliana.fr/content/manipulation/04c_API_TP.html) de l'ENSAE. Les principales différences avec celui-ci sont dans la partie relative aux API authentifiées: nous proposons ici l'utilisation d'une API de l'Insee plutôt que de l'INPI.
 :::
 
+<badge sspcloud>
+<badge colab>
 
 # Introduction : Qu'est-ce qu'une API ?
 
@@ -27,7 +29,7 @@ L'utilisation accrue d'API dans le cadre de stratégies open-data est l'un
 des piliers des 15 feuilles de route ministérielles françaises
 en matière d’ouverture, de circulation et de valorisation des données publiques.
 
-:::: {.callout-tip collapse="false"}
+:::: {.tip collapse="false"}
 ## Illustration avec l'API BAN
 
 Pour illustrer ceci, imaginons ce qu'il se passe lorsque, dans la suite du chapitre, nous ferons des requêtes à l'API BAN.
@@ -154,7 +156,7 @@ requests.get(url_ban_example)
 
 Qu'est-ce qu'on obtient ? Un __code HTTP__. Le code 200 correspond aux requêtes réussies, c'est-à-dire pour lesquelles le serveur est en mesure de répondre. Si ce n'est pas le cas, pour une raison _x_ ou _y_, vous aurez un code différent.
 
-::: {.callout-tip collapse="true"}
+::: {.tip collapse="true"}
 ## Les codes HTTP
 
 Les codes de statut HTTP sont des réponses standard envoyées par les serveurs web pour indiquer le résultat d'une requête effectuée par un client (comme un navigateur ou un script Python). Ils sont classés en différentes catégories selon le premier chiffre du code :
@@ -333,7 +335,7 @@ m
 ```
 
 
-::: {.callout-note collapse="true"}
+::: {.note collapse="true"}
 ## Quelques exemples d'API à connaître
 
 Les principaux fournisseurs de données officielles proposent des API. C'est le cas notamment de l'[Insee](https://api.insee.fr/catalogue/), d'[Eurostat](https://wikis.ec.europa.eu/display/EUROSTATHELP/API+-+Getting+started), de la [BCE](https://data.ecb.europa.eu/help/data-examples), de la [FED](https://fred.stlouisfed.org/docs/api/fred/), de la [Banque Mondiale](https://datahelpdesk.worldbank.org/knowledgebase/topics/125589)...
@@ -1020,6 +1022,7 @@ import {L} from "@observablehq/hello-leaflet"
 
 ```{python}
 #| echo: false
+#| label: error-authent-insee
 error_request_no_token = requests.get(
     f"https://api.insee.fr/entreprises/sirene/V3.11/siren/",
     headers={"Accept": "application/json"}
