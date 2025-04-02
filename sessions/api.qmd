@@ -753,7 +753,6 @@ Nous avons déjà utilisé plusieurs API. Néanmoins ces dernières étaient tou
 
 Cela se fait généralement par le biais d'un _token_. Ce dernier est une sorte de mot de passe, souvent utilisé dans les systèmes modernes d'authentification pour certifier de l'identité d'un.e utilisateur.trice (cf. [chapitre `Git`](/content/git/introgit.qmd)).
 
-Pour illustrer l'usage des _tokens_, nous allons utiliser une API de l'INPI (Institut national de la protection intellectuelle). Les API développées par cette organisation nécessitent en effet une authentification. Nous allons utiliser cette API pour récupérer des documents PDF issus des comptes sociaux des entreprises.
 
 Avant d'en arriver là, nous allons faire un aparté sur la confidentialité des tokens et la manière d'éviter de révéler ceux-ci dans votre code.
 
