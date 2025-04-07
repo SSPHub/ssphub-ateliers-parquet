@@ -21,13 +21,13 @@ jobs:
             libgdal-dev \
             libgeos-dev \
             libproj-dev
+          cp pyprojects/api.toml pyproject.toml
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
           cache: 'pip' # caching pip dependencies
       - run: |
             pip install uv
-            cp pyprojects/api.toml pyproject.toml
             uv pip install -r pyproject.toml --system
       - name: Set up quarto
         uses: quarto-dev/quarto-actions/setup@v2
