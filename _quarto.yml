@@ -17,13 +17,16 @@ filters:
 lang: fr
 
 website:
-  title: "Atelier du `SSPHub`"
+  title: "Atelier du SSPHub"
   navbar:
     left:
       - href: index.qmd
         text: Home
       - href: "sessions/api.qmd"
         text: API
+      - icon: github
+        href: https://github.com/InseeFrLab/ssphub-ateliers.git
+    background: "#6886bb"
 
 
 format:
