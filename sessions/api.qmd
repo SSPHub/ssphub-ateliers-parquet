@@ -8,11 +8,17 @@ number-sections: true
 image: https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/serveurpython.jpg
 ---
 
-::: {.tip}
+<a href="https://datalab.sspcloud.fr/launcher/ide/vscode-python?autoLaunch=true&amp;name=%C2%AB02_pandas_intro%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmain%2Fsspcloud%2Finit-vscode.sh%C2%BB&amp;init.personalInitArgs=%C2%ABmanipulation%2002_pandas_intro%20correction%C2%BB" target="_blank" rel="noopener" data-original-href="https://datalab.sspcloud.fr/launcher/ide/vscode-python?name=SSPHub-Atelier-API&version=2.2.7&s3=region-ec97c721&init.personalInit=«https%3A%2F%2Fraw.githubusercontent.com%2FInseeFrLab%2Fssphub-ateliers%2Frefs%2Fheads%2Fmain%2Finit%2Fapi.sh»&networking.user.enabled=true&autoLaunch=true"><img src="https://custom-icon-badges.demolab.com/badge/SSP%20Cloud-Lancer_avec_VSCode-blue?logo=vsc&amp;logoColor=white" alt="Onyxia"></a>
+
+::: {.tip collapse="true"}
+## Source d'inspiration
+
 Cet atelier s'inspire fortement du chapitre consacré aux API dans le cours de [_Python pour la data science_](https://pythonds.linogaliana.fr/content/manipulation/04c_API_TP.html) de l'ENSAE. Les principales différences avec celui-ci sont dans la partie relative aux API authentifiées : nous proposons ici l'utilisation d'une API de l'Insee plutôt que de l'INPI.
 :::
 
-<badge sspcloud>
+
+
+
 <badge colab>
 
 # Introduction : Qu'est-ce qu'une API ?
@@ -53,12 +59,12 @@ Une API a donc vocation à servir d'intermédiaire entre un client et un serveur
 
 Le premier mode (accès par un navigateur) est principalement utilisé lorsqu'une interface web permet à un utilisateur de faire des choix afin de lui renvoyer des résultats correspondant à ceux-ci. Prenons à nouveau l'exemple de l'API de géolocalisation que nous utiliserons dans ce chapitre. Imaginons une interface web permettant à l'utilisateur deux choix : un code postal et une adresse. Cela sera injecté dans la requête et le serveur répondra avec la géolocalisation adaptée.
 
-::: {.content-hidden when-format="ipynb"}
+::: {.content-visible when-format="ipynb"}
 Une démonstration interactive est disponible sur XXXXX
 :::
 
 
-::: {.content-hidden when-format="html"}
+::: {.content-visible when-format="html"}
 
 
 :::: {.columns}

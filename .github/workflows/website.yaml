@@ -26,7 +26,7 @@ jobs:
           cache: 'pip' # caching pip dependencies
       - run: |
             pip install uv
-            uv pip install -r pyproject.toml --system
+            uv pip install -r pyprojects/api.toml --system
       - name: Set up quarto
         uses: quarto-dev/quarto-actions/setup@v2
         with:
