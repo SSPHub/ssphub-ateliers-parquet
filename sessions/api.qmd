@@ -60,9 +60,9 @@ Une API a donc vocation à servir d'intermédiaire entre un client et un serveur
 Le premier mode (accès par un navigateur) est principalement utilisé lorsqu'une interface web permet à un utilisateur de faire des choix afin de lui renvoyer des résultats correspondant à ceux-ci. Prenons à nouveau l'exemple de l'API de géolocalisation que nous utiliserons dans ce chapitre. Imaginons une interface web permettant à l'utilisateur deux choix : un code postal et une adresse. Cela sera injecté dans la requête et le serveur répondra avec la géolocalisation adaptée.
 
 ::: {.content-visible when-format="ipynb"}
-Une démonstration interactive est disponible sur XXXXX
-:::
+Une démonstration interactive est disponible sur https://inseefrlab.github.io/ssphub-ateliers/sessions/api.html
 
+::
 
 ::: {.content-visible when-format="html"}
 
