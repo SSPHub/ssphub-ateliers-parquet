@@ -1,8 +1,10 @@
 #!/bin/bash
 
-DOWNLOAD_URL_ENV=
-uv pip install -r pyprojects/api.toml
+DOWNLOAD_URL_ENV="https://raw.githubusercontent.com/InseeFrLab/ssphub-ateliers/refs/heads/main/pyprojects/api.toml"
+curl -L $DOWNLOAD_URL_ENV -o "pyproject.toml"
+uv pip install -r pyproject.toml
 
-curl -L $DOWNLOAD_URL -o "${WORK_DIR}/${CHAPTER}.ipynb"
+DOWNLOAD_URL_NOTEBOOK="https://inseefrlab.github.io/ssphub-ateliers/sessions/api.ipynb"
+curl -L $DOWNLOAD_URL_NOTEBOOK -o "api.ipynb"
 
 code-server --install-extension quarto.quarto
