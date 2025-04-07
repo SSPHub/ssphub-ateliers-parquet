@@ -29,7 +29,7 @@ Vous êtes certainement habitué à récupérer vos données depuis des fichiers
 
 Heureusement, il existe d'autres manières d'accéder à des données : les API de données. En informatique, une API est un __ensemble de protocoles permettant à deux logiciels de communiquer entre eux__. Par exemple, on parle parfois d'API Pandas ce qui désigne le fait que `Pandas` est une interface entre votre code `Python` et un langage compilé plus efficace (`C`) qui fait les calculs que vous demandez au niveau de `Python`. L’objectif d’une API est ainsi de fournir un point d’accès à une fonctionnalité qui soit facile à utiliser et qui masque les détails de la mise en oeuvre.
 
-Dans ce chapitre, nous nous intéressons principalement aux API de données. Ces dernières sont simplement une façon de mettre à disposition des données : plutôt que de laisser l’utilisateur consulter directement des bases de données (souvent volumineuses et complexes), l’API lui propose de formuler une requête qui est traitée par le serveur hébergeant la base de données, puis de recevoir des données en réponse à sa requête.
+Dans cet atelier, nous nous intéressons principalement aux API de données. Ces dernières sont simplement une façon de mettre à disposition des données : plutôt que de laisser l’utilisateur consulter directement des bases de données (souvent volumineuses et complexes), l’API lui propose de formuler une requête qui est traitée par le serveur hébergeant la base de données, puis de recevoir des données en réponse à sa requête.
 
 L'utilisation accrue d'API dans le cadre de stratégies open-data est l'un
 des piliers des 15 feuilles de route ministérielles françaises
@@ -38,15 +38,15 @@ en matière d’ouverture, de circulation et de valorisation des données publiq
 :::: {.tip collapse="false"}
 ## Illustration avec l'API BAN
 
-Imaginons ce qu'il se passe lorsqu'on requête l'API BAN, en prenant la métaphore d'un restaurant :
+Imaginons ce qui se passe lorsqu'on requête l'API BAN (Base d'Adresses Nationale), en prenant la métaphore d'un restaurant :
 
-* 💬 Via `Python` {{< fa brands python >}}, on envoie notre commande à celle-ci : des adresses plus ou moins complètes avec des instructions annexes comme le code commune. Ces instructions annexes peuvent s'apparenter à des informations fournies au serveur du restaurant comme des interdits alimentaires qui vont personnaliser la recette.
+* 💬 Via `Python` {{< fa brands python >}}, on passe une commande à l'API: des adresses plus ou moins complètes avec des instructions annexes comme le code commune. Ces instructions annexes peuvent s'apparenter à des informations fournies au serveur du restaurant comme des interdits alimentaires qui vont personnaliser la recette.
 
-* 🧑‍🍳 A partir de ces instructions, le plat est lancé. En l'occurrence, il s'agit de faire tourner sur les serveurs d'Etalab une routine qui va chercher dans un référentiel d'adresse celle qui est la plus similaire à celle qu'on a demandé en adaptant éventuellement en fonction des instructions annexes qu'on a fournies.
+* 🧑‍🍳 A partir de ces instructions, la confection du plat est lancée. En l'occurrence, il s'agit de faire tourner sur les serveurs d'Etalab une routine qui va chercher dans un référentiel d'adresses celle qui est la plus similaire à celle qu'on a demandée en adaptant éventuellement en fonction des instructions annexes qu'on a fournies.
 
-* 🍕 Une fois que côté cuisine on a fini cette préparation, on renvoie le plat au client. En l'occurrence, le plat sera des coordonnées géographiques qui correspondent à l'adresse la plus similaire.
+* 🍕 Une fois que la cuisine a fini la préparation du plat, on le renvoie au client. En l'occurrence, le plat sera constitué des coordonnées géographiques qui correspondent à l'adresse la plus similaire.
 
-Le client n'a donc qu'à se préoccuper de faire une bonne requête et d'apprécier le plat qui lui est fourni. L'intelligence dans la mise en oeuvre est laissée aux spécialistes qui ont conçu l'API. Peut-être que d'autres spécialistes, par exemple _Google Maps_, mettent en oeuvre une recette différente pour ce même plat (des coordonnées géographiques) mais ils vous proposeront probablement un menu très similaire. Ceci vous simplifie beaucoup la vie : il vous suffit de changer quelques lignes de code d'appel à une API plutôt que de modifier un ensemble long et complexe de méthodes d'identification d'adresses.
+Le client n'a donc qu'à se préoccuper de faire une bonne requête et d'apprécier le plat qui lui est fourni. L'intelligence dans la mise en oeuvre est laissée aux spécialistes qui ont conçu l'API. Peut-être que d'autres spécialistes, par exemple _Google Maps_, mettent en oeuvre une recette différente pour ce même plat (des coordonnées géographiques) mais ils vous proposeront probablement un résultat très similaire. Ce mode de fonctionnement vous simplifie beaucoup la vie : pour changer de restaurant, il vous suffit généralement de changer quelques lignes de code d'appel à une API plutôt que de modifier un ensemble long et complexe de méthodes d'identification d'adresses.
 
 ::::
 
@@ -231,7 +231,7 @@ C'est là l'inconvénient principal de l'usage des API : le travail _ex post_ su
 
 ## Comment connaître les _inputs_ et _outputs_ des API ?
 
-Ici on a pris l'API BAN comme un outil magique dont on connaissait les principaux _inputs_ (l'_endpoint_, les paramètres et leur formattage...).
+Ici on a pris l'API BAN comme un outil magique dont on connaissait les principaux _inputs_ (le _endpoint_, les paramètres et leur formattage...).
 Mais comment faire, en pratique, pour en arriver là ? Tout simplement en lisant la documentation lorsqu'elle existe et en testant celle-ci via des exemples.
 
 Les bonnes API proposent un outil interactif qui s'appelle le [`swagger`](https://swagger.io/docs/). C'est un site web interactif où sont décrites les principales fonctionnalités de l'API et où l'utilisateur peut tester des exemples interactivement. Ces documentations sont souvent créées automatiquement lors de la construction d'une API et mises à disposition par le biais d'un point d'entrée `/docs`. Elles permettent souvent d'éditer certains paramètres dans le navigateur, voir le JSON obtenu (ou l'erreur générée) et récupérer la requête formattée qui permet d'obtenir celui-ci. Ces consoles interactives dans le navigateur permettent de répliquer le tâtonnement qu'on peut faire par ailleurs dans des outils spécialisés comme [`postman`](https://www.postman.com/).
@@ -288,7 +288,7 @@ Les deux premières lignes du _dataframe_ obtenu à la question 1 devraient êtr
 df_avenue_verdier.head(2)
 ```
 
-A la question 2, on ressort cette fois qu'une seule observation, qu'on pourrait retravailler avec `GeoPandas` pour vérifier qu'on a bien placé ce point sur une carte
+A la question 2, la requête ne renvoie cette fois qu'une seule observation, qu'on pourrait retravailler avec `GeoPandas` pour vérifier qu'on a bien placé ce point sur une carte
 
 ```{python}
 #| label: exercise1-question2
@@ -347,7 +347,7 @@ m
 
 Les principaux fournisseurs de données officielles proposent des API. C'est le cas notamment de l'[Insee](https://api.insee.fr/catalogue/), d'[Eurostat](https://wikis.ec.europa.eu/display/EUROSTATHELP/API+-+Getting+started), de la [BCE](https://data.ecb.europa.eu/help/data-examples), de la [FED](https://fred.stlouisfed.org/docs/api/fred/), de la [Banque Mondiale](https://datahelpdesk.worldbank.org/knowledgebase/topics/125589)...
 
-Néanmoins, la production de données par les institutions étatiques est loin d'être restreinte aux producteurs de statistiques publiques. Le portail [API gouv](https://api.gouv.fr/) est le point de référencement principal pour les API produites par l'administration centrale française ou des administrations territoriales. De nombreuses villes publient également des données sur leurs infrastructures par le biais d'API, par exemple la [ville de Paris](https://opendata.paris.fr/api/explore/v2.1/console).
+Néanmoins, la production de données par les institutions publiques est loin d'être restreinte aux producteurs de statistiques publiques. Le portail [API gouv](https://api.gouv.fr/) est le point de référencement principal pour les API produites par l'administration centrale française ou des administrations territoriales. De nombreuses villes publient également des données sur leurs infrastructures par le biais d'API, par exemple la [ville de Paris](https://opendata.paris.fr/api/explore/v2.1/console).
 
 Les producteurs de données privées proposent également des API. Par exemple, la [SNCF](https://data.sncf.com/api) ou la [RATP](https://data.ratp.fr/pages/temps-reel/) proposent des API pour certains usages. Les grands acteurs du numérique, par exemple [`Spotify` {{< fa brands spotify >}}](<https://developer.spotify.com/web-api/>) proposent généralement des API pour intégrer certains de leurs services à des applications externes.
 
@@ -759,14 +759,14 @@ m
 
 Nous avons déjà utilisé plusieurs API. Néanmoins ces dernières étaient toutes sans authentification et présentent peu de restrictions, hormis le nombre d'échos. Ce n'est pas le cas de toutes les API. Il est fréquent que les API qui permettent d'aspirer plus de données ou d'accéder à des données confidentielles nécessitent une authentification pour tracer les utilisateurs de données.
 
-Cela se fait généralement par le biais d'un _token_. Ce dernier est une sorte de mot de passe, souvent utilisé dans les systèmes modernes d'authentification pour certifier de l'identité d'un.e utilisateur.trice (cf. [chapitre `Git`](/content/git/introgit.qmd)).
+Cela se fait généralement en utilisant un _token_. Ce dernier est une sorte de mot de passe, souvent utilisé dans les systèmes modernes d'authentification pour certifier de l'identité d'un.e utilisateur.trice (cf. [chapitre `Git`](/content/git/introgit.qmd)).
 
 
-Avant d'en arriver là, nous allons faire un aparté sur la confidentialité des tokens et la manière d'éviter de révéler ceux-ci dans votre code.
+Avant d'en présenter l'usage, nous allons faire un rapide aparté sur la confidentialité des _tokens_ et la manière d'éviter de révéler ceux-ci dans votre code.
 
 ## Bonnes pratiques pour utiliser un token dans un code sans le révéler 👮
 
-Les _tokens_ sont des informations personnelles qui ne doivent pas être partagées. Ils n'ont pas vocation à être présent dans le code.
+Les _tokens_ sont des informations personnelles qui ne doivent pas être partagées. Ils n'ont donc pas vocation à apparaître dans le code.
 
 Comme ceci est évoqué à plusieurs reprises dans le cours de [mise en production](https://ensae-reproductibilite.github.io/website/) en 3e année de l'ENSAE, il est important de séparer le code des éléments de configuration :
 
@@ -780,9 +780,9 @@ L'idée est de trouver une recette pour apporter les éléments de configuration
 [^gha]: C'est par exemple l'approche adoptée pour construire ces supports. Cela se fait de [cette manière](XXXX).
 
 ::: {.important}
-Il ne faut jamais mettre de _token_ dans `Git`. Sinon, vous courrez le risque d'avoir votre identité usurpée : des robots scannent en continu  `Github` à la recherche de jetons pour ensuite lancer des dénis de service vous identifiant vous.
+Il ne faut jamais mettre de _token_ dans `Git`. Sinon, vous courrez le risque d'avoir votre identité usurpée : des robots scannent en continu  `Github` à la recherche de jetons pour ensuite lancer des dénis de service en se faisant passer pour vous.
 
-Si vous avez, par erreur, partagé un jeton : pas de panique, cela peut arriver ! L'avantage des jetons est qu'ils sont révocables : vous pouvez l'invalider et en créer un nouveau pour continuer à utiliser le service désiré. La meilleure parade pour éviter cela est d'ajouter tout de suite le `.env` au `.gitignore`.
+Si vous avez partagé par erreur un jeton : pas de panique, cela peut arriver ! L'avantage des jetons est qu'ils sont révocables : vous pouvez l'invalider et en créer un nouveau pour continuer à utiliser le service désiré. La bonne réaction consiste à révoquer le jeton le plus vite possible, une fois la fuite constatée. La meilleure parade pour éviter ce type de fuite est d'ajouter tout de suite le `.env` au `.gitignore`.
 :::
 
 
@@ -803,14 +803,14 @@ Nous allons nous concentrer sur l'API Sirene mais, sur ce portail, il en existe 
 
 1. Se créer un compte sur le [portail des API](https://api.insee.fr/catalogue/)
 2. Aller voir l'espace `Mes applications` et en créer une nouvelle. Par simplicité, vous pouvez la nommer _"Atelier SSPHub"_.
-3. Dans celle-ci, aller dans l'onglet _"Clefs et jetons"_.Créer un jeton (vous pouvez laisser la validité proposée).
+3. Dans celle-ci, aller dans l'onglet _"Clefs et jetons"_.Créer un jeton (vous pouvez laisser la durée de validité proposée).
 4. Cliquer sur l'onglet _Souscriptions_. Choisir l'API Sirene.
 5. A droite, sélectionner l'application créée précédemment. Si vous allez voir votre application, elle devrait maintenant pouvoir interagir avec l'API Sirene.
 
-Testons maintenant l'API Sirene grâce au _swagger_ :
+Testons maintenant l'API Sirene grâce au _swagger_ (onglet `Console de l'API`) :
 
 6. Plus bas, dans la documentation interactive se rendre au point d'entrée `/siren/{siren}` (méthode `GET`).
-7. Remplir le champ `q` avec le SIREN `500569405` (SIREN de décathlon 😉)
+7. Remplir le champ `q` avec le SIREN `500569405` (SIREN de Décathlon 😉)
 8. Si vous avez l'erreur ci-dessous, comprenez-vous pourquoi ?
 
 ::: {.content-hidden when-format="html"}
@@ -822,7 +822,7 @@ error_request_no_token
 
 :::
 
-1. Changer l'application via le menu déroulant : maintenant que vous avez un _token_ valide, réessayer
+1. Changer l'application via le menu déroulant : maintenant que vous avez un _token_ valide, soumettez à nouveau la même requête.
 
 Vous devriez maintenant avoir cette sortie :
 
