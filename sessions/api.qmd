@@ -61,8 +61,7 @@ Le premier mode (accès par un navigateur) est principalement utilisé lorsqu'un
 
 ::: {.content-visible when-format="ipynb"}
 Une démonstration interactive est disponible sur https://inseefrlab.github.io/ssphub-ateliers/sessions/api.html
-
-::
+:::
 
 ::: {.content-visible when-format="html"}
 
