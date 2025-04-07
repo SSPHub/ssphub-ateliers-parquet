@@ -1045,6 +1045,7 @@ import {L} from "@observablehq/hello-leaflet"
 ```{python}
 #| echo: false
 #| label: error-authent-insee
+#| eval: false
 error_request_no_token = requests.get(
     f"https://api.insee.fr/entreprises/sirene/V3.11/siren/",
     headers={"Accept": "application/json"}
