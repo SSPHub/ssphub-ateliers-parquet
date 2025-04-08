@@ -6,7 +6,6 @@ description: |
   Les __API__ (_Application Programming Interface_) sont un mode d'accès aux données en expansion. Grâce aux API, l'automatisation de scripts est facilitée puisqu'il n'est plus nécessaire de stocker un fichier, et gérer ses versions, mais uniquement de requêter une base et laisser au producteur de données le soin de gérer les mises à jour de la base.
 number-sections: true
 image: https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/serveurpython.jpg
-eval: false
 ---
 
 <a href="https://datalab.sspcloud.fr/launcher/ide/vscode-python?autoLaunch=true&amp;name=%C2%AB02_pandas_intro%C2%BB&amp;init.personalInit=%C2%ABhttps%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fpython-datascientist%2Fmain%2Fsspcloud%2Finit-vscode.sh%C2%BB&amp;init.personalInitArgs=%C2%ABmanipulation%2002_pandas_intro%20correction%C2%BB" target="_blank" rel="noopener" data-original-href="https://datalab.sspcloud.fr/launcher/ide/vscode-python?name=SSPHub-Atelier-API&version=2.2.7&s3=region-ec97c721&init.personalInit=«https%3A%2F%2Fraw.githubusercontent.com%2FInseeFrLab%2Fssphub-ateliers%2Frefs%2Fheads%2Fmain%2Finit%2Fapi.sh»&networking.user.enabled=true&autoLaunch=true"><img src="https://custom-icon-badges.demolab.com/badge/SSP%20Cloud-Lancer_avec_VSCode-blue?logo=vsc&amp;logoColor=white" alt="Onyxia"></a>
