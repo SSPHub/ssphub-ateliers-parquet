@@ -37,6 +37,8 @@ jobs:
         run: |
           quarto render --to html
           quarto render sessions/api.qmd --to ipynb
+          mkdir -p temp_notebooks
+          cp sessions/api.ipynb temp_notebooks/api.ipynb
         env:
             TOKEN_API_INSEE:  ${{ secrets.TOKEN_API_INSEE }}
       - name: Publish to GitHub Pages
@@ -44,3 +46,16 @@ jobs:
         with:
           target: gh-pages
           render: "false"
+      - name: Pushes to another repository
+        uses: linogaliana/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-directory: 'temp_notebooks/'
+          destination-repository-username: 'linogaliana'
+          destination-repository-name: 'https://github.com/linogaliana/ssphub-ateliers-notebooks.git'
+          user-email: lino.galiana@insee.fr
+          destination-github-username: linogaliana
+          #target-branch: test
+          create-target-branch-if-needed: true
+          reset-repo: true
