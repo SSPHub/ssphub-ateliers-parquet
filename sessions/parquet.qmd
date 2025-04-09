@@ -1,0 +1,91 @@
+---
+title: "Atelier pour découvrir la récupération de données via avec le format Parquet"
+author: Lino Galiana
+date: 2025-04-09
+description: |
+  XXXXX
+number-sections: true
+image: https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/serveurpython.jpg
+---
+
+## Etapes préliminaires
+
+```{python}
+from utils_parquet import download_dataset_mc, measure_performance
+```
+
+```{python}
+download_dataset_mc(engine="mc")
+```
+
+
+## Exo 1. CSV -> Parquet + intérêt lazy evaluation
+
+
+```{python}
+import pandas as pd
+
+# Apply the decorator to functions
+@measure_performance
+def process_csv(*args, **kwargs):
+    df = pd.read_csv("data/RPindividus_24.csv")
+    return (
+        df.loc[df["DEPT"] == 36]
+        .groupby(["AGED", "DEPT"])["IPONDI"]
+        .sum().reset_index()
+        .rename(columns={"IPONDI": "n_indiv"})
+    )
+
+@measure_performance
+def process_parquet(*args, **kwargs):
+    df = pd.read_parquet("data/RPindividus_24.parquet")
+    return (
+        df.loc[df["DEPT"] == "36"]
+        .groupby(["AGED", "DEPT"])["IPONDI"]
+        .sum().reset_index()
+        .rename(columns={"IPONDI": "n_indiv"})
+    )
+
+perf_csv = process_csv()
+perf_parquet_no_lazy = process_parquet()
+```
+
+
+
+```{python}
+import duckdb
+import pyarrow.dataset as ds
+
+@measure_performance
+def summarize_parquet_duckdb(*args, **kwargs):
+    con = duckdb.connect(":memory:")
+    query = """
+    FROM read_parquet('data/RPindividus_24.parquet')
+    SELECT AGED, DEPT, SUM(IPONDI) AS n_indiv
+    GROUP BY AGED, DEPT
+    """
+
+    return (con.sql(query).to_df())
+
+@measure_performance
+def summarize_parquet_arrow(*args, **kwargs):
+
+    dataset = ds.dataset("data/RPindividus_24.parquet", format="parquet")
+    table = dataset.to_table()
+    grouped_table = (
+        table
+        .group_by(["AGED", "DEPT"])
+        .aggregate([("IPONDI", "sum")])
+        .rename_columns(["AGED", "DEPT", "n_indiv"])
+        .to_pandas()
+    )
+
+    return (
+        grouped_table
+    )
+
+process_parquet()
+summarize_parquet_duckdb()
+summarize_parquet_arrow()
+```
+
