@@ -24,6 +24,20 @@ en ligne de commande:
 uv pip install -r pyproject.toml --system
 ```
 
+
+<details open>
+<summary>
+Dérouler les _slides_ associées ci-dessous ou [cliquer ici](https://inseefrlab.github.io/ssphub-ateliers-slides)
+pour les afficher en plein écran.
+</summary>
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><iframe class="sourceCode yaml code-with-copy" src="hhttps://inseefrlab.github.io/ssphub-ateliers-slides"></iframe></div>
+
+</details>
+
+
+
 # Introduction : Qu'est-ce qu'une API ?
 
 Vous êtes certainement habitué à récupérer vos données depuis des fichiers type CSV ou par _webscraping_[^def-webscraping]. Le webscraping est un pis-aller pour accéder à de la donnée.

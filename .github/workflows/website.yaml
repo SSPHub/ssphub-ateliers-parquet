@@ -38,7 +38,7 @@ jobs:
           quarto render --to html
           quarto render sessions/api.qmd --to ipynb
           mkdir -p temp_notebooks
-          cp sessions/api.ipynb temp_notebooks/api.ipynb
+          cp _site/sessions/api.ipynb temp_notebooks/api.ipynb
         env:
             TOKEN_API_INSEE:  ${{ secrets.TOKEN_API_INSEE }}
       - name: Publish to GitHub Pages
