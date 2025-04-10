@@ -36,7 +36,7 @@ jobs:
       - name: Render website
         run: |
           quarto render --to html
-          quarto render sessions/api.qmd --to ipynb
+          quarto render sessions/api.qmd --to ipynb  --execute
           mkdir -p temp_notebooks
           cp _site/sessions/api.ipynb temp_notebooks/api.ipynb
         env:

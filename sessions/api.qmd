@@ -24,8 +24,8 @@ en ligne de commande:
 uv pip install -r pyproject.toml --system
 ```
 
+::: {.content-visible when-format="html"}
 
-::: {.cell .markdown}
 <details open>
 
 <summary>
@@ -42,10 +42,6 @@ pour les afficher en plein écran._
 
 </details>
 
-
-:::
-
-::: {.content-visible when-format="html"}
 
 <details>
 
@@ -231,12 +227,13 @@ localisation_insee = req.json()
 localisation_insee
 ```
 
+::: {.content-hidden when-format="ipynb"}
+
 ```{python}
 #| echo: false
 ojs_define(localisation_insee = localisation_insee)
 ```
 
-::: {.content-hidden when-format="html"}
 
 ```{ojs}
 //| echo: true
@@ -253,12 +250,16 @@ En l'occurrence, on voit que les données sont dans un JSON imbriqué. Il faut d
 localisation_insee.get('features')[0].get('properties')
 ```
 
+::: {.content-hidden when-format="ipynb"}
+
 ```{python}
 #| echo: false
 ojs_define(localisation_insee2 = localisation_insee.get('features')[0].get('properties'))
 ```
 
-::: {.content-hidden when-format="html"}
+:::
+
+::: {.content-hidden when-format="ipynb"}
 
 ```{ojs}
 //| echo: false
@@ -325,7 +326,6 @@ df_avenue_verdier = pd.DataFrame(
 Les deux premières lignes du _dataframe_ obtenu à la question 1 devraient être
 
 ```{python}
-#| echo: false
 df_avenue_verdier.head(2)
 ```
 
@@ -653,7 +653,6 @@ bpe_loc = bpe_loc.rename({"Unnamed: 0": "index"}, axis = "columns")
 Les géolocalisations obtenues prennent cette forme
 
 ```{python}
-#| echo: false
 bpe_loc.head(2)
 ```
 
