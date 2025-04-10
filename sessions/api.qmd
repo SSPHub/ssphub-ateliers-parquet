@@ -25,18 +25,43 @@ uv pip install -r pyproject.toml --system
 ```
 
 
+::: {.cell .markdown}
 <details open>
+
 <summary>
-Dérouler les _slides_ associées ci-dessous ou [cliquer ici](https://inseefrlab.github.io/ssphub-ateliers-slides)
-pour les afficher en plein écran.
+
+Afficher les _slides_ associées
+
 </summary>
 
+<div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><iframe class="sourceCode yaml code-with-copy" src="https://inseefrlab.github.io/ssphub-ateliers-slides/slides-data/api.html#/title-slide"></iframe></div>
 
-<div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><iframe class="sourceCode yaml code-with-copy" src="hhttps://inseefrlab.github.io/ssphub-ateliers-slides"></iframe></div>
+
+_[Cliquer ici](https://inseefrlab.github.io/ssphub-ateliers-slides){target="_blank"}
+pour les afficher en plein écran._
 
 </details>
 
 
+:::
+
+::: {.content-visible when-format="html"}
+
+<details>
+
+<summary>
+
+Regarder le _replay_ de la session _live_ du 09 Avril 2025:
+
+</summary>
+
+{{< video https://minio.lab.sspcloud.fr/lgaliana/ssphub/replay/atelier_api_20240409/video1643065335.mp4 >}}
+
+
+</details>
+
+
+:::
 
 # Introduction : Qu'est-ce qu'une API ?
 
