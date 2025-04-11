@@ -89,3 +89,4 @@ summarize_parquet_duckdb()
 summarize_parquet_arrow()
 ```
 
+## Exo 2: lazy evaluation
