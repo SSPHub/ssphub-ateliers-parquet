@@ -75,3 +75,12 @@ def download_dataset_mc(
         pa.Table.from_pandas(df_filtered),
         "data/RPindividus_24.parquet"
     )
+
+    os.makedirs("data/RPindividus", exist_ok=True)
+
+    # Sauvegarder en Parquet (partitionné)
+    pq.write_to_dataset(
+        pa.Table.from_pandas(df),
+        "data/RPindividus",
+        partition_cols=["REGION", "DEPT"],
+    )

@@ -1,0 +1,6 @@
+dir.create("data")
+download.file("https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/triangle.geojson", "data/triangle.geojson")
+download.file("https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/malakoff.geojson", "data/malakoff.geojson")
+download.file("https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/montrouge.geojson", "data/montrouge.geojson")
+download.file("https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/geoparquet/dvf.parquet", "data/dvf.parquet")
+download.file("https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/geoparquet/carreaux.parquet", "data/carreaux.parquet")

@@ -3,7 +3,8 @@ project:
   render:
     - index.qmd
     - sessions/api.qmd
-#- slides/api.qmd
+    - sessions/parquet.qmd
+
 
 custom-callout:
   exercise:
