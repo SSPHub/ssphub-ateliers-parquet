@@ -2,7 +2,6 @@ project:
   type: website
   render:
     - index.qmd
-    - sessions/api.qmd
     - sessions/parquet.qmd
 
 
