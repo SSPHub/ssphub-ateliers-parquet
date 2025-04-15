@@ -45,6 +45,7 @@ jobs:
       - name: Render website
         run: |
           quarto render --to html
+          quarto publish gh-pages --no-render --no-browser
         env:
             TOKEN_API_INSEE:  ${{ secrets.TOKEN_API_INSEE }}
       - name: Publish to GitHub Pages
