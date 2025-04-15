@@ -48,8 +48,3 @@ jobs:
           quarto publish gh-pages --no-render --no-browser
         env:
             TOKEN_API_INSEE:  ${{ secrets.TOKEN_API_INSEE }}
-      - name: Publish to GitHub Pages
-        uses: quarto-dev/quarto-actions/publish@v2
-        with:
-          target: gh-pages
-          render: "false"
