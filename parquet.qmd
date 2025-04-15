@@ -399,7 +399,7 @@ transactions_malakoff <-
   sf::st_as_sf(transactions_malakoff, wkt = "geom_text", crs = 2154) |>
   rename(geometry=geom_text)
 
-transactions_malakoff
+head(transactions_malakoff, 3)
 ```
 
 Une fois les données prêtes, on intersecte les points avec le triangle représentant le centre-ville de Malakoff (question 3)
@@ -462,4 +462,8 @@ ggplot(
 ```
 
 Tout ceci ne nous dit rien de la différence entre les biens dans le triangle et en dehors de celui-ci. Nous n'avons fait aucun contrôle sur les caractéristiques des biens. Nous laissons les curieux explorer la mine d'or qu'est cette base.
+
+
+# Accéder directement à des données sur `S3`
+
 

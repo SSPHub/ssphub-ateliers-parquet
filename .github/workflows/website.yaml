@@ -8,7 +8,7 @@ on:
 
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    runs-on: inseefrlab/onyxia-rstudio:r4.3.3-2025.04.07
     permissions:
       contents: write
     steps:
