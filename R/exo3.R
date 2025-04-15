@@ -5,7 +5,7 @@ library(gt)
 
 source("R/benchmark_functions.R")
 
-path_data <- "./sessions/data"
+path_data <- "./data"
 path_parquet <- glue("{path_data}/RPindividus.parquet")
 path_parquet_subset <- glue("{path_data}/RPindividus_24.parquet")
 path_parquet_csv <- glue("{path_data}/RPindividus_24.csv")
@@ -51,7 +51,7 @@ benchmark3_table <- benchmark3 |>
     )
 
 
-gt(benchmark3_table) |>
+table3 <- gt(benchmark3_table) |>
     cols_hide(c(value, unit)) |>
     gtExtras::gt_plt_bar(column=median_bar) |>
     gtExtras::gt_plt_bar(column=mem_alloc_bar) |>
@@ -63,6 +63,9 @@ gt(benchmark3_table) |>
     fmt_number(median, decimals = 2) |>
     cols_label(everything() ~ '') |>
     fmt_markdown(method)
+
+
+gtsave(table3, "./bench/mark3.html")
 
 
 all_benchmark <- bind_rows(
