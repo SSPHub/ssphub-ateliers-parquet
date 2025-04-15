@@ -15,12 +15,22 @@ Afin de comparer les différents formats et méthodes d'utilisation, nous allons
 
 ## Etapes préliminaires
 
-```{python}
+```{.python}
 from utils_parquet import download_dataset_mc, measure_performance
 ```
 
-```{python}
+```{.python}
 download_dataset_mc(engine="mc")
+```
+
+
+```{r}
+library(duckdb)
+library(glue)
+library(DBI)
+library(dplyr)
+library(dbplyr)
+library(mapview)
 ```
 
 
@@ -78,6 +88,11 @@ et exécutez le. Que se passe-t-il à votre avis ?
 
 
 :::
+
+```{r}
+# url_bpe <- "https://www.insee.fr/fr/statistiques/fichier/8217525/BPE23.parquet"
+url_bpe <- "https://minio.lab.sspcloud.fr/lgaliana/diffusion/BPE23.parquet" #pb temporaire github actions avec insee.fr
+```
 
 ::: {#tip-optimisation-duckdb .callout-tip collapse="true"}
 ## Comprendre l'optimisation permise par `Parquet` et `DuckDB`
@@ -190,13 +205,7 @@ La *lazy evaluation* et les optimisations d'`Arrow` apportent des gain de perfor
 
 L'import des contours dont nous aurons besoin en {{< fa brands r-project >}} se fait assez naturellement grâce à [`sf`](https://r-spatial.github.io/sf/).
 
-```{r}
-library(duckdb)
-library(glue)
-library(dplyr)
-library(dbplyr)
-library(mapview)
-```
+
 
 ```{r}
 triangle <- sf::st_read("data/triangle.geojson", quiet=TRUE)

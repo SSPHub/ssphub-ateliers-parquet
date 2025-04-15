@@ -21,7 +21,8 @@ jobs:
             libgdal-dev \
             libgeos-dev \
             libproj-dev \
-            libfontconfig1-dev
+            libfontconfig1-dev \
+            libharfbuzz-dev libfribidi-dev
           cp pyprojects/api.toml pyproject.toml
       - uses: actions/setup-python@v5
         with:
