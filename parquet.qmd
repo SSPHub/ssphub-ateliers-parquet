@@ -8,23 +8,20 @@ number-sections: true
 image: https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/serveurpython.jpg
 ---
 
-Tout au long de cette application, nous allons voir comment utiliser le format `Parquet` de manière la plus efficiente.
 
-Afin de comparer les différents formats et méthodes d'utilisation, nous allons **comparer le temps d'exécution et l'usage mémoire d'une requête standard**.
+# Introduction
+
+Tout au long de ce tutoriel guidé, nous allons voir comment utiliser le format `Parquet` de manière la plus efficiente.
+
+Afin de comparer les différents formats et méthodes d'utilisation, nous allons généralement **comparer le temps d'exécution et l'usage mémoire d'une requête standard**.
 
 
 ## Etapes préliminaires
 
-```{.python}
-from utils_parquet import download_dataset_mc, measure_performance
-```
-
-```{.python}
-download_dataset_mc(engine="mc")
-```
-
+Au cours de cet atelier, nous aurons besoin des _packages_ suivants:
 
 ```{r}
+#| output: false
 library(duckdb)
 library(glue)
 library(DBI)
@@ -34,15 +31,31 @@ library(mapview)
 ```
 
 
-## Exo 1. CSV -> Parquet + intérêt lazy evaluation
+Ce tutoriel s'appuie sur des données ouvertes diffusées au format `Parquet`. Pour les récupérer, vous pouvez exécuter le script suivant:
 
-Commençons par comparer les formats `CSV` et `Parquet`.
+<details>
 
+<summary>
+Récupérer les données
+</summary>
+
+```{.r include="./R/create_environment.R"}
+```
+
+</details>
+
+# Passer de `CSV` à `Parquet`
+
+Commençons par comparer les formats `CSV` et `Parquet` afin de comprendre les gains qu'apporte déjà ce format. 
+
+Le prochain chapitre propose d'utiliser le _package_ [`bench`](https://bench.r-lib.org/) pour les comparatifs. Il est plus simple d'encapsuler dans ces _benchmarks_ des fonctions: vous pouvez développer le code puis l'intégrer dans une fonction _ad hoc_. 
+
+Pour ce premier exercice, nous proposons d'utiliser `Arrow` pour la lecture des fichiers. Nous verrons ultérieurement comment faire la même chose avec `DuckDB`.
 
 :::{.exercise}
-# Exercice 1 : Du `CSV` au `Parquet`
+## Exercice 1 : Du `CSV` au `Parquet` {.unnumbered}
 
-* La requête suivante permet de calculer les données pour construire une pyramide des âges sur un département donné, à partir du fichier `CSV` du recensement. Encapsuler la requête dans une fonction `req_csv` (sans argument).
+* La requête suivante permet de calculer les données pour construire une pyramide des âges sur un département donné, à partir du fichier `CSV` du recensement. Après l'avoir testée, encapsuler celle-ci dans une fonction `req_csv` (sans argument).
 
 ```{.r}
 res <- readr::read_csv("data/RPindividus_24.csv") |>
@@ -58,13 +71,41 @@ res <- readr::read_csv("data/RPindividus_24.csv") |>
 * Arranger les données pour avoir un tableau de résultats
 :::
 
+<details>
 
-## Exo 2: lazy evaluation
+<summary>
+Proposition de correction
+</summary>
 
-La partie précédente a montré un **gain de temps considérable** du passage de `CSV` à `Parquet`. Néanmoins, l'**utilisation mémoire était encore très élevée** alors qu'on utilise de fait qu'une infime partie du fichier. Dans cette partie, on va voir comment utiliser la ***lazy evaluation*** et les **optimisations du plan d'exécution** effectuées par `Arrow` pour exploiter pleinement la puissance du format `Parquet`.
+```{.r include="./R/benchmark_functions.R"}
+```
+
+```{.r include="./R/exo1.R"}
+```
+
+
+</details>
+
+<script>
+  function resizeIframe(obj) {
+    obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+  }
+</script>
+
+<iframe src="./bench/mark1.html" style="width: 100%; border-style: none; height: 0; overflow: hidden"
+        onload="resizeIframe(this)"></iframe>
+
+
+# Comprendre l'intérêt de la _lazy evaluation_
+
+La partie précédente a montré un **gain de temps considérable** du passage de `CSV` à `Parquet`. Néanmoins, l'**utilisation mémoire était encore très élevée** alors qu'on utilise de fait qu'une infime partie du fichier. 
+
+Dans cette partie, on va voir comment utiliser la ***lazy evaluation*** et les **optimisations du plan d'exécution** effectuées par `Arrow` pour exploiter pleinement la puissance du format `Parquet`.
+
+## La _lazy evaluation_ en pratique
 
 ::: {.exercise}
-## Exercice 2 : Exploiter la *lazy evaluation* et les optimisations d'`Arrow`
+## Exercice 2 : Exploiter la *lazy evaluation* et les optimisations d'`Arrow` {.unnumbered}
 
 * Utiliser la fonction [arrow::open_dataset](https://arrow.apache.org/docs/r/reference/open_dataset.html) pour ouvrir le fichier `data/RPindividus_24.parquet`. Regarder la classe de l'objet obtenu.
 * Afficher les 5 premières lignes de la table avec la fonction `head()`. Observer l'objet obtenu (sortie en console, classe).
@@ -89,12 +130,10 @@ et exécutez le. Que se passe-t-il à votre avis ?
 
 :::
 
-```{r}
-# url_bpe <- "https://www.insee.fr/fr/statistiques/fichier/8217525/BPE23.parquet"
-url_bpe <- "https://minio.lab.sspcloud.fr/lgaliana/diffusion/BPE23.parquet" #pb temporaire github actions avec insee.fr
-```
+<iframe src="./bench/mark2.html" style="width: 100%; border-style: none; height: 0; overflow: hidden"
+        onload="resizeIframe(this)"></iframe>
 
-::: {#tip-optimisation-duckdb .callout-tip collapse="true"}
+
 ## Comprendre l'optimisation permise par `Parquet` et `DuckDB`
 
 Pour réduire la volumétrie des données importées, il est possible de mettre en oeuvre deux stratégies:
@@ -111,8 +150,14 @@ Pour cela, nous utilisons la fonction SQL `EXPLAIN ANALYZE` disponible dans `duc
 
 Ceci nécessite l'utilisation de l'extension `httpfs` (un peu l'équivalent des `library` de `R` en `duckdb`). Elle s'installe et s'utilise de la manière suivante
 
-```{.r}
+```{r}
 #| output: false
+library(duckdb)
+
+# url_bpe <- "https://www.insee.fr/fr/statistiques/fichier/8217525/BPE23.parquet"
+url_bpe <- "https://minio.lab.sspcloud.fr/lgaliana/diffusion/BPE23.parquet"
+con <- dbConnect(duckdb())
+
 dbExecute(
   con,
   glue(
@@ -183,13 +228,15 @@ La comparaison de ces plans d'exécution montre l'intérêt de faire un filtre s
 
 Pourquoi seulement un rapport de 1 à 4 entre le poids des deux fichiers ? C'est parce que nos requêtes comportent toute deux la variable `IPONDI` (les poids à utiliser pour extrapoler l'échantillon à la population) qui est à haute précision là où beaucoup d'autres colonnes comportent un nombre réduit de modalités et sont donc peu volumineuses.
 
-:::
+
+
+# Le partitionnement
+
+La *lazy evaluation* et les optimisations d'`Arrow` apportent des gain de performance considérables. Mais on peut encore faire mieux ! Lorsqu'on sait qu'on va être amené à **filter régulièrement les données selon une variable d'intérêt**, on a tout intérêt à **partitionner** le fichier `Parquet` selon cette variable.
 
 
 ::: {.exercise}
-# Partie 3 : Le `Parquet` partitionné
-
-La *lazy evaluation* et les optimisations d'`Arrow` apportent des gain de performance considérables. Mais on peut encore faire mieux ! Lorsqu'on sait qu'on va être amené à **filter régulièrement les données selon une variable d'intérêt**, on a tout intérêt à **partitionner** le fichier `Parquet` selon cette variable.
+## Partie 3 : Le `Parquet` partitionné {.unnumbered}
 
 * Parcourir la documentation de la fonction [arrow::write_dataset](https://arrow.apache.org/docs/r/reference/write_dataset.html) pour comprendre comment spécifier la clé de partitionnement d'un fichier `Parquet`. Plusieurs méthodes sont possibles !
 * Importer la table individus complète du recensement `data/RPindividus.parquet` avec la fonction [arrow::open_dataset](https://arrow.apache.org/docs/r/reference/open_dataset.html) et l'exporter en une table `data/RPindividus_partitionne.parquet` partitionnée par la région (`REGION`) et le département (`DEPT`)
@@ -200,33 +247,51 @@ La *lazy evaluation* et les optimisations d'`Arrow` apportent des gain de perfor
 
 :::
 
+<iframe src="./bench/mark3.html" style="width: 100%; border-style: none; height: 0; overflow: hidden"
+        onload="resizeIframe(this)"></iframe>
 
-## Exercice 4
+# `DuckDB` ou `Arrow` ? 
+
+La réponse dépend des préférences de chacun. Les deux écosystèmes sont très bien. `DuckDB` est pensé pour sa simplicité d'usage et son universalité: en principe, qu'on fasse du {{< fa brands python >}}, {{< fa brands r-project >}}, {{< fa brands js-square >}} ou de la ligne de commande, on pourra utiliser le même code SQL, seule la définition de la connection changera. `Arrow` propose une syntaxe un peu moins familière mais l'intégration au `tidyverse` rend ce _framework_ beaucoup plus facile d'usage que si on devait directement utiliser `Arrow`.
+
+Il existe aussi des clients plus hauts niveau pour `duckdb`: c'est notamment le cas de la connection entre `duckdb` et `tidyverse` permise en {{< fa brands r-project >}}. Ceux-ci permettent des opérations de manipulation de données plus complexes: si le SQL de `DuckDB` est déjà plus simple d'usage que celui de `PostGre`, on reste limité pour des opérations complexes de (dé)structuration de données: le client `tidyverse` apporte les avantages de cet écosystème en plus de ceux de `DuckDB`. 
+
+
+# `(Geo)Parquet` et `DuckDB` pour les données spatiales
+
+
+Nous proposons, pour illustrer l'un des atouts de `DuckDB`, à savoir sa simplicité d'usage sur des problèmes complexes, de faire du traitement de données spatiales. Pour cela, nous allons faire une tâche lourde: restreindre des données spatiales à partir de leur appartenance à une zone géographique donnée. Cette dernière sera définie géométriquement comme un triangle dont deux des coins correspondent aux anciens bâtiments de l'Insee à Malakoff. 
 
 L'import des contours dont nous aurons besoin en {{< fa brands r-project >}} se fait assez naturellement grâce à [`sf`](https://r-spatial.github.io/sf/).
 
-
+## Récupération des données
 
 ```{r}
+dir.create("data")
+download.file("https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/triangle.geojson", "data/triangle.geojson")
+download.file("https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/malakoff.geojson", "data/malakoff.geojson")
+download.file("https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/montrouge.geojson", "data/montrouge.geojson")
+download.file("https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/geoparquet/dvf.parquet", "data/dvf.parquet")
+download.file("https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/geoparquet/carreaux.parquet", "data/carreaux.parquet")
+
+
 triangle <- sf::st_read("data/triangle.geojson", quiet=TRUE)
 malakoff <- sf::st_read("data/malakoff.geojson", quiet=TRUE)
 montrouge <- sf::st_read("data/montrouge.geojson", quiet=TRUE)
 ```
 
-En premier lieu, on peut visualiser la ville de `Malakoff` :
+On peut visualiser la ville de `Malakoff` et notre zone d'intérêt (qu'on nommera, par abus de langage, le triangle d'or de Malakoff):
 
 ```{r}
 mapview(malakoff) + mapview(triangle, col.regions = "#ffff00")
 ```
 
-Et ensuite les contours de Montrouge :
+Nous utiliserons aussi les contours de Montrouge pour cette partie:
 
 ```{r}
 mapview(montrouge)
 ```
 
-
-`DuckDB` est un moteur de base de données analytique en mémoire, optimisé pour les requêtes SQL sur des données volumineuses, particulièrement adapté aux fichiers plats comme `Parquet` ou CSV, et intégrable dans des langages comme Python, R ou SQL.
 
 En principe, `duckdb` fonctionne à la manière d'une base de données. Autrement dit, on définit une base de données et effectue des requêtes (SQL ou verbes `tidyverse`) dessus. Pour créer une base de données, il suffit de faire un `read_parquet` avec le chemin du fichier.
 
@@ -261,8 +326,10 @@ cog_malakoff <- "92046"
 cog_montrouge <- "92049"
 ```
 
+## _Spatial join_ avec `DuckDB`
+
 ::: {.exercice}
-## Exercice 3
+## Exercice 3 {.unnumbered}
 
 1. En vous inspirant du _template_ ci-dessus, créer un _dataframe_ `transactions_malakoff` qui recense les transactions dans cette charmante bourgade.
 

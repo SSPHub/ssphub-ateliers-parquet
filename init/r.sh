@@ -12,4 +12,3 @@ mkdir -p data
 
 curl -o "data/RPindividus.parquet" "https://minio.lab.sspcloud.fr/projet-formation/bonnes-pratiques/data/RPindividus.parquet"
 
-Rscript ./sessions/create_environment.R

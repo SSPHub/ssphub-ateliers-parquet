@@ -1,3 +1,5 @@
+library(glue)
+library(stringr)
 library(dplyr)
 library(ggplot2)
 library(bench)
@@ -5,7 +7,7 @@ library(gt)
 
 source("R/benchmark_functions.R")
 
-path_data <- "./sessions/data"
+path_data <- "./data"
 path_parquet <- glue("{path_data}/RPindividus.parquet")
 path_parquet_subset <- glue("{path_data}/RPindividus_24.parquet")
 path_parquet_csv <- glue("{path_data}/RPindividus_24.csv")
@@ -53,7 +55,7 @@ benchmark1_table <- benchmark1 |>
         )
 
 
-gt(benchmark1_table) |>
+benchmark1 <- gt(benchmark1_table) |>
     gtExtras::gt_plt_bar(column=median_bar) |>
     gtExtras::gt_plt_bar(column=mem_alloc_bar) |>
     gtExtras::gt_plt_bar(column=poids_bar) |>
@@ -68,4 +70,5 @@ gt(benchmark1_table) |>
     fmt_markdown(method)
 
 
-
+dir.create("./bench")
+gtsave(benchmark1, "./bench/mark1.html")

@@ -2,8 +2,8 @@ project:
   type: website
   render:
     - index.qmd
-    - sessions/parquet.qmd
-
+    - parquet.qmd
+  execute-dir: project
 
 custom-callout:
   exercise:
@@ -11,6 +11,7 @@ custom-callout:
     color: "pink"
 
 filters:
+  - include-code-files
   - custom-callout
   - "vscode.lua"
 

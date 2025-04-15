@@ -1,6 +1,12 @@
 library(dplyr)
 library(ggplot2)
 library(bench)
+library(stringr)
+
+path_data <- "./data"
+path_parquet <- glue("{path_data}/RPindividus.parquet")
+path_parquet_subset <- glue("{path_data}/RPindividus_24.parquet")
+path_csv_subset <- glue("{path_data}/RPindividus_24.csv")
 
 
 req_csv <- function(path="data/RPindividus_24.csv") {

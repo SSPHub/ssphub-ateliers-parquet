@@ -3,7 +3,7 @@ library(ggplot2)
 library(bench)
 library(glue)
 
-path_data = "./sessions/data"
+path_data = "./data"
 
 path_parquet_subset <- glue("{path_data}/RPindividus_24.parquet")
 path_csv_subset <- glue("{path_data}/RPindividus_24.csv")
