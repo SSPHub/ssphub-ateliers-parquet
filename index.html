@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Lino Galiana">
+<meta name="description" content="XXXXX">
 
-<title>Masterclass du SSPHub – Atelier du SSPHub</title>
+<title>Atelier pour découvrir la récupération de données via avec le format Parquet – Atelier du SSPHub</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -30,8 +66,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -41,6 +75,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-cbb56798d03c8fd1c10f24bc05b4e88f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/fontawesome6-1.2.0/all.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/fontawesome6-1.2.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,35 +104,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Recherche"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-sample-listings .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-filename','listing-file-modified',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-filename","listing-file-modified"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-sample-listings'] = new List('listing-sample-listings', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <style>
 div.callout-exercise.callout {
   border-left-color: pink;
@@ -111,35 +118,6 @@ div.callout-exercise.callout-style-default .callout-icon::before, div.callout-ex
 }
 </style>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -190,7 +168,27 @@ window.Quarto = {
     <h2 id="toc-title">Sur cette page</h2>
    
   <ul>
-  <li><a href="#replays-des-sessions" id="toc-replays-des-sessions" class="nav-link active" data-scroll-target="#replays-des-sessions"><em>Replays</em> des sessions</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#etapes-préliminaires" id="toc-etapes-préliminaires" class="nav-link" data-scroll-target="#etapes-préliminaires"><span class="header-section-number">1.1</span> Etapes préliminaires</a></li>
+  </ul></li>
+  <li><a href="#passer-de-csv-à-parquet" id="toc-passer-de-csv-à-parquet" class="nav-link" data-scroll-target="#passer-de-csv-à-parquet"><span class="header-section-number">2</span> Passer de <code>CSV</code> à <code>Parquet</code></a></li>
+  <li><a href="#comprendre-lintérêt-de-la-lazy-evaluation" id="toc-comprendre-lintérêt-de-la-lazy-evaluation" class="nav-link" data-scroll-target="#comprendre-lintérêt-de-la-lazy-evaluation"><span class="header-section-number">3</span> Comprendre l’intérêt de la <em>lazy evaluation</em></a>
+  <ul class="collapse">
+  <li><a href="#la-lazy-evaluation-en-pratique" id="toc-la-lazy-evaluation-en-pratique" class="nav-link" data-scroll-target="#la-lazy-evaluation-en-pratique"><span class="header-section-number">3.1</span> La <em>lazy evaluation</em> en pratique</a></li>
+  <li><a href="#comprendre-loptimisation-permise-par-parquet-et-duckdb" id="toc-comprendre-loptimisation-permise-par-parquet-et-duckdb" class="nav-link" data-scroll-target="#comprendre-loptimisation-permise-par-parquet-et-duckdb"><span class="header-section-number">3.2</span> Comprendre l’optimisation permise par <code>Parquet</code> et <code>DuckDB</code></a></li>
+  </ul></li>
+  <li><a href="#le-partitionnement" id="toc-le-partitionnement" class="nav-link" data-scroll-target="#le-partitionnement"><span class="header-section-number">4</span> Le partitionnement</a></li>
+  <li><a href="#duckdb-ou-arrow" id="toc-duckdb-ou-arrow" class="nav-link" data-scroll-target="#duckdb-ou-arrow"><span class="header-section-number">5</span> <code>DuckDB</code> ou <code>Arrow</code> ?</a></li>
+  <li><a href="#geoparquet-et-duckdb-pour-les-données-spatiales" id="toc-geoparquet-et-duckdb-pour-les-données-spatiales" class="nav-link" data-scroll-target="#geoparquet-et-duckdb-pour-les-données-spatiales"><span class="header-section-number">6</span> <code>(Geo)Parquet</code> et <code>DuckDB</code> pour les données spatiales</a>
+  <ul class="collapse">
+  <li><a href="#récupération-des-données" id="toc-récupération-des-données" class="nav-link" data-scroll-target="#récupération-des-données"><span class="header-section-number">6.1</span> Récupération des données</a></li>
+  <li><a href="#spatial-join-avec-duckdb" id="toc-spatial-join-avec-duckdb" class="nav-link" data-scroll-target="#spatial-join-avec-duckdb"><span class="header-section-number">6.2</span> <em>Spatial join</em> avec <code>DuckDB</code></a></li>
+  </ul></li>
+  <li><a href="#accéder-directement-à-des-données-sur-s3" id="toc-accéder-directement-à-des-données-sur-s3" class="nav-link" data-scroll-target="#accéder-directement-à-des-données-sur-s3"><span class="header-section-number">7</span> Accéder directement à des données sur <code>S3</code></a>
+  <ul class="collapse">
+  <li><a href="#données-partitionnées" id="toc-données-partitionnées" class="nav-link" data-scroll-target="#données-partitionnées"><span class="header-section-number">7.1</span> Données partitionnées</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -199,14 +197,31 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><em>Masterclass</em> du <code>SSPHub</code></h1>
+<h1 class="title">Atelier pour découvrir la récupération de données via avec le format Parquet</h1>
 </div>
 
+<div>
+  <div class="description">
+    <p>XXXXX</p>
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Auteur·rice</div>
+    <div class="quarto-title-meta-contents">
+             <p>Lino Galiana </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Date de publication</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">9 avril 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -216,34 +231,644 @@ window.Quarto = {
 </header>
 
 
-<p>Site web en construction</p>
-<div id="listing-sample-listings" class="quarto-listing quarto-listing-container-grid">
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-listing-file-modified-sort="1744804738670">
-<a href="./sessions/api.qmd" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="card-footer">
-<div class="card-filename listing-filename">
-<p>api.qmd</p>
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>Tout au long de ce tutoriel guidé, nous allons voir comment utiliser le format <code>Parquet</code> de manière la plus efficiente.</p>
+<p>Afin de comparer les différents formats et méthodes d’utilisation, nous allons généralement <strong>comparer le temps d’exécution et l’usage mémoire d’une requête standard</strong>.</p>
+<section id="etapes-préliminaires" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="etapes-préliminaires"><span class="header-section-number">1.1</span> Etapes préliminaires</h2>
+<p>Au cours de cet atelier, nous aurons besoin des <em>packages</em> suivants:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: false</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(duckdb)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glue)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DBI)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dbplyr)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapview)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Ce tutoriel s’appuie sur des données ouvertes diffusées au format <code>Parquet</code>. Pour les récupérer, vous pouvez exécuter le script suivant:</p>
+<details>
+<summary>
+Récupérer les données
+</summary>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(arrow)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fs)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Chemin du fichier d'entrée</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>filename_table_individu <span class="ot">&lt;-</span> <span class="st">"data/RPindividus.parquet"</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Lire le fichier Parquet</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_parquet</span>(filename_table_individu)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Filtrer les données pour REGION == "24"</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>df_filtered <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(REGION <span class="sc">==</span> <span class="st">"24"</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Sauvegarder en CSV</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(df_filtered, <span class="st">"data/RPindividus_24.csv"</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Sauvegarder en Parquet</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">write_parquet</span>(df_filtered, <span class="st">"data/RPindividus_24.parquet"</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Créer le dossier si nécessaire</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="st">"data/RPindividus"</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Sauvegarder en Parquet partitionné par REGION et DEPT</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="fu">write_dataset</span>(</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  df,</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="st">"data/RPindividus"</span>,</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">format =</span> <span class="st">"parquet"</span>,</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">partitioning =</span> <span class="fu">c</span>(<span class="st">"REGION"</span>, <span class="st">"DEPT"</span>)</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</section>
+</section>
+<section id="passer-de-csv-à-parquet" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Passer de <code>CSV</code> à <code>Parquet</code></h1>
+<p>Commençons par comparer les formats <code>CSV</code> et <code>Parquet</code> afin de comprendre les gains qu’apporte déjà ce format.</p>
+<p>Le prochain chapitre propose d’utiliser le <em>package</em> <a href="https://bench.r-lib.org/"><code>bench</code></a> pour les comparatifs. Il est plus simple d’encapsuler dans ces <em>benchmarks</em> des fonctions: vous pouvez développer le code puis l’intégrer dans une fonction <em>ad hoc</em>.</p>
+<p>Pour ce premier exercice, nous proposons d’utiliser <code>Arrow</code> pour la lecture des fichiers. Nous verrons ultérieurement comment faire la même chose avec <code>DuckDB</code>.</p>
+<div class="callout callout-style-default callout-exercise callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<div class="card-file-modified listing-file-modified">
-<p>16/04/2025 11:58:58</p>
+<div class="callout-title-container flex-fill">
+Exercice 1 : Du <code>CSV</code> au <code>Parquet</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>La requête suivante permet de calculer les données pour construire une pyramide des âges sur un département donné, à partir du fichier <code>CSV</code> du recensement. Après l’avoir testée, encapsuler celle-ci dans une fonction <code>req_csv</code> (sans argument).</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"data/RPindividus_24.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(DEPT <span class="sc">==</span> <span class="st">"36"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(AGED, DEPT) <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n_indiv =</span> <span class="fu">sum</span>(IPONDI))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li><p>Sur le même modèle, construire une fonction <code>req_read_parquet</code> basée cette fois sur le fichier <code>data/RPindividus_24.parquet</code> chargé avec la fonction <a href="https://arrow.apache.org/docs/r/reference/read_parquet.html">read_parquet</a> d’<code>Arrow</code></p></li>
+<li><p>Comparer les performances (temps d’exécution et allocation mémoire) de ces deux méthodes grâce à la fonction <a href="https://bench.r-lib.org/#benchmark">bench::mark</a>, à laquelle on passera les paramètres <code>iterations = 1</code> (comparaison à partir d’une seule itération) et <code>check = FALSE</code> (autorise les outputs des deux fonctions à être différents).</p></li>
+<li><p>Arranger les données pour avoir un tableau de résultats</p></li>
+</ul>
+</div>
+</div>
+<details>
+<summary>
+Proposition de correction
+</summary>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bench)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>path_data <span class="ot">&lt;-</span> <span class="st">"./data"</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>path_parquet <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"{path_data}/RPindividus.parquet"</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>path_parquet_subset <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"{path_data}/RPindividus_24.parquet"</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>path_csv_subset <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"{path_data}/RPindividus_24.csv"</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>req_csv <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">path=</span><span class="st">"data/RPindividus_24.csv"</span>) {</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(path) <span class="sc">|&gt;</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(DEPT <span class="sc">==</span> <span class="st">"36"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(AGED, DEPT) <span class="sc">|&gt;</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n_indiv =</span> <span class="fu">sum</span>(IPONDI))</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(res)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>req_read_parquet <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">path=</span><span class="st">"data/RPindividus_24.parquet"</span>) {</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> arrow<span class="sc">::</span><span class="fu">read_parquet</span>(path) <span class="sc">|&gt;</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(DEPT <span class="sc">==</span> <span class="st">"36"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(AGED, DEPT) <span class="sc">|&gt;</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n_indiv =</span> <span class="fu">sum</span>(IPONDI))</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(res)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>req_open_dataset <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">path=</span><span class="st">"data/RPindividus_24.parquet"</span>) {</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> arrow<span class="sc">::</span><span class="fu">open_dataset</span>(path) <span class="sc">|&gt;</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(DEPT <span class="sc">==</span> <span class="st">"36"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(AGED, DEPT) <span class="sc">|&gt;</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n_indiv =</span> <span class="fu">sum</span>(IPONDI)) <span class="sc">|&gt;</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">collect</span>()</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(res)</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>req_open_dataset_full <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">path=</span><span class="st">"data/RPindividus.parquet"</span>) {</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> arrow<span class="sc">::</span><span class="fu">open_dataset</span>(path) <span class="sc">|&gt;</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(DEPT <span class="sc">==</span> <span class="st">"36"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(AGED, DEPT) <span class="sc">|&gt;</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n_indiv =</span> <span class="fu">sum</span>(IPONDI)) <span class="sc">|&gt;</span></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">collect</span>()</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(res)</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>req_open_dataset_part <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">path=</span><span class="st">"data/RPindividus_partitionne.parquet"</span>) {</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> arrow<span class="sc">::</span><span class="fu">open_dataset</span>(path, <span class="at">hive_style =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(DEPT <span class="sc">==</span> <span class="st">"36"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(AGED, DEPT) <span class="sc">|&gt;</span></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n_indiv =</span> <span class="fu">sum</span>(IPONDI)) <span class="sc">|&gt;</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">collect</span>()</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(res)</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>mesurer_taille <span class="ot">&lt;-</span> <span class="cf">function</span>(path){</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>  poids <span class="ot">&lt;-</span> <span class="fu">file.size</span>(path)</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>  taille <span class="ot">&lt;-</span> <span class="fu">convertir_taille</span>(poids)</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(taille)</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="co"># Fonction pour convertir les octets en Mo ou Go</span></span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>convertir_taille <span class="ot">&lt;-</span> <span class="cf">function</span>(octets) {</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (octets <span class="sc">&gt;=</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">3</span>) {</span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">paste</span>(<span class="fu">round</span>(octets <span class="sc">/</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">3</span>, <span class="dv">2</span>), <span class="st">"Go"</span>))</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (octets <span class="sc">&gt;=</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">2</span>) {</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">paste</span>(<span class="fu">round</span>(octets <span class="sc">/</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">2</span>, <span class="dv">2</span>), <span class="st">"Mo"</span>))</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">paste</span>(octets, <span class="st">"octets"</span>))</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glue)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bench)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/benchmark_functions.R"</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>path_data <span class="ot">&lt;-</span> <span class="st">"./data"</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>path_parquet <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"{path_data}/RPindividus.parquet"</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>path_parquet_subset <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"{path_data}/RPindividus_24.parquet"</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>path_parquet_csv <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"{path_data}/RPindividus_24.csv"</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>benchmark1 <span class="ot">&lt;-</span> bench<span class="sc">::</span><span class="fu">mark</span>(</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">req_csv =</span> <span class="fu">req_csv</span>(path_csv_subset),</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">req_read_parquet =</span> <span class="fu">req_read_parquet</span>(path_parquet_subset),</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">iterations =</span> <span class="dv">1</span>,</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">check =</span> <span class="cn">FALSE</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>poids_csv <span class="ot">&lt;-</span> <span class="fu">mesurer_taille</span>(path_csv_subset)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>poids_parquet <span class="ot">&lt;-</span> <span class="fu">mesurer_taille</span>(path_parquet_subset)</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>benchmark1_table <span class="ot">&lt;-</span> benchmark1 <span class="sc">|&gt;</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">value =</span> <span class="fu">as.numeric</span>(<span class="fu">str_extract</span>(mem_alloc, <span class="st">"</span><span class="sc">\\</span><span class="st">d+(</span><span class="sc">\\</span><span class="st">.</span><span class="sc">\\</span><span class="st">d+)?"</span>)),</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">unit =</span> <span class="fu">str_extract</span>(mem_alloc, <span class="st">"[KMGTP]B"</span>),</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">mem_alloc_kb =</span> <span class="fu">case_when</span>(</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>        unit <span class="sc">==</span> <span class="st">"KB"</span> <span class="sc">~</span> value,</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>        unit <span class="sc">==</span> <span class="st">"MB"</span> <span class="sc">~</span> value <span class="sc">*</span> <span class="dv">1024</span>,</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>        unit <span class="sc">==</span> <span class="st">"GB"</span> <span class="sc">~</span> value <span class="sc">*</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        unit <span class="sc">==</span> <span class="st">"TB"</span> <span class="sc">~</span> value <span class="sc">*</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">3</span>,</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>        unit <span class="sc">==</span> <span class="st">"PB"</span> <span class="sc">~</span> value <span class="sc">*</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">4</span>,</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        <span class="cn">TRUE</span> <span class="sc">~</span> <span class="cn">NA_real_</span>  <span class="co"># Par défaut, si l'unité n'est pas reconnue</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>        <span class="at">median =</span> <span class="fu">as.numeric</span>(median, <span class="at">units=</span><span class="st">"seconds"</span>),</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>        <span class="at">poids =</span> <span class="fu">as.numeric</span>(</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>            <span class="fu">gsub</span>(<span class="st">" Mo"</span>, <span class="st">""</span>, <span class="fu">c</span>(poids_csv, poids_parquet))</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>        <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"CSV avec `read_csv` (`readr`)"</span>, <span class="st">"Parquet `read_parquet` (`arrow`)"</span>),</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>        <span class="at">median_bar =</span> <span class="fu">as.numeric</span>(median, <span class="at">units=</span><span class="st">"seconds"</span>),</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>        <span class="at">mem_alloc =</span> <span class="fu">paste0</span>(value, <span class="st">" "</span>, unit),</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>        <span class="at">poids_bar =</span> poids</span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>        ) <span class="sc">|&gt;</span></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>        method, poids, poids_bar, median, median_bar, mem_alloc, <span class="at">mem_alloc_bar=</span>mem_alloc_kb</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>benchmark1 <span class="ot">&lt;-</span> <span class="fu">gt</span>(benchmark1_table) <span class="sc">|&gt;</span></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>    gtExtras<span class="sc">::</span><span class="fu">gt_plt_bar</span>(<span class="at">column=</span>median_bar) <span class="sc">|&gt;</span></span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>    gtExtras<span class="sc">::</span><span class="fu">gt_plt_bar</span>(<span class="at">column=</span>mem_alloc_bar) <span class="sc">|&gt;</span></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>    gtExtras<span class="sc">::</span><span class="fu">gt_plt_bar</span>(<span class="at">column=</span>poids_bar) <span class="sc">|&gt;</span></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cols_move</span>(median_bar, <span class="at">after=</span>median) <span class="sc">|&gt;</span></span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cols_move</span>(mem_alloc_bar, <span class="at">after=</span>mem_alloc_bar) <span class="sc">|&gt;</span></span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_spanner</span>(<span class="fu">md</span>(<span class="st">"**Temps d'exécution**&lt;br&gt; _(sec.)_"</span>), <span class="fu">starts_with</span>(<span class="st">"median"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_spanner</span>(<span class="fu">md</span>(<span class="st">"**Mémoire allouée**&lt;br&gt; _(MB)_"</span>), <span class="fu">starts_with</span>(<span class="st">"mem_alloc"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_spanner</span>(<span class="fu">md</span>(<span class="st">"**Poids sur disque**&lt;br&gt; _(Mo)_"</span>), <span class="fu">starts_with</span>(<span class="st">"poids"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cols_label</span>(<span class="fu">everything</span>() <span class="sc">~</span> <span class="st">''</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(median, <span class="at">decimals =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(poids, <span class="at">decimals =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_markdown</span>(method)</span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"./bench"</span>)</span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a><span class="fu">gtsave</span>(benchmark1, <span class="st">"./bench/mark1.html"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<script>
+  function resizeIframe(obj) {
+    obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+  }
+</script>
+<iframe src="./bench/mark1.html" style="width: 100%; border-style: none; height: 0; overflow: hidden" onload="resizeIframe(this)">
+</iframe>
+</section>
+<section id="comprendre-lintérêt-de-la-lazy-evaluation" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Comprendre l’intérêt de la <em>lazy evaluation</em></h1>
+<p>La partie précédente a montré un <strong>gain de temps considérable</strong> du passage de <code>CSV</code> à <code>Parquet</code>. Néanmoins, l’<strong>utilisation mémoire était encore très élevée</strong> alors qu’on utilise de fait qu’une infime partie du fichier.</p>
+<p>Dans cette partie, on va voir comment utiliser la <strong><em>lazy evaluation</em></strong> et les <strong>optimisations du plan d’exécution</strong> effectuées par <code>Arrow</code> pour exploiter pleinement la puissance du format <code>Parquet</code>.</p>
+<section id="la-lazy-evaluation-en-pratique" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="la-lazy-evaluation-en-pratique"><span class="header-section-number">3.1</span> La <em>lazy evaluation</em> en pratique</h2>
+<div class="callout callout-style-default callout-exercise callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercice 2 : Exploiter la <em>lazy evaluation</em> et les optimisations d’<code>Arrow</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Utiliser la fonction <a href="https://arrow.apache.org/docs/r/reference/open_dataset.html">arrow::open_dataset</a> pour ouvrir le fichier <code>data/RPindividus_24.parquet</code>. Regarder la classe de l’objet obtenu.</p></li>
+<li><p>Afficher les 5 premières lignes de la table avec la fonction <code>head()</code>. Observer l’objet obtenu (sortie en console, classe).</p></li>
+<li><p>Faire la même chose avec <code>duckdb</code> (par le biais de l’API <em>tidyverse</em> et en SQL direct)</p></li>
+<li><p>Prenez ce code:</p></li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>arrow<span class="sc">::</span><span class="fu">open_dataset</span>(path_parquet_subset) <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(DEPT <span class="sc">==</span> <span class="st">"36"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(AGED, DEPT) <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n_indiv =</span> <span class="fu">sum</span>(IPONDI))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>et exécutez le. Que se passe-t-il à votre avis ?</p>
+<ul>
+<li><p>Ajouter une étape <code>collect()</code> à la fin de cette chaîne. Comprenez-vous la différence ?</p></li>
+<li><p>Construire une fonction <code>req_open_dataset</code> sur le modèle de celles de la partie précédente, qui importe cette fois les données avec la fonction <a href="https://arrow.apache.org/docs/r/reference/open_dataset.html">arrow::open_dataset</a></p></li>
+<li><p>Comparer les performances (temps d’exécution et allocation mémoire) de la méthode <code>read_parquet</code> et de la méthode <code>open_dataset</code> grâce à la fonction <a href="https://bench.r-lib.org/#benchmark">bench::mark</a></p></li>
+</ul>
+</div>
+</div>
+<iframe src="./bench/mark2.html" style="width: 100%; border-style: none; height: 0; overflow: hidden" onload="resizeIframe(this)">
+</iframe>
+</section>
+<section id="comprendre-loptimisation-permise-par-parquet-et-duckdb" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="comprendre-loptimisation-permise-par-parquet-et-duckdb"><span class="header-section-number">3.2</span> Comprendre l’optimisation permise par <code>Parquet</code> et <code>DuckDB</code></h2>
+<p>Pour réduire la volumétrie des données importées, il est possible de mettre en oeuvre deux stratégies:</p>
+<ul>
+<li>N’importer qu’un nombre limité de colonnes</li>
+<li>N’importer qu’un nombre limité de lignes</li>
+</ul>
+<p>Comme cela a été évoqué dans les <em>slides</em>, le format <code>Parquet</code> est particulièrement optimisé pour le premier besoin. C’est donc généralement la première optimisation mise en oeuvre. Pour s’en convaincre on peut regarder la taille des données importées dans deux cas:</p>
+<ul>
+<li>On utilise beaucoup de lignes mais peu de colonnes</li>
+<li>On utilise beaucoup de colonnes mais peu de lignes</li>
+</ul>
+<p>Pour cela, nous utilisons la fonction SQL <code>EXPLAIN ANALYZE</code> disponible dans <code>duckdb</code>. Elle décompose le plan d’exécution de <code>duckdb</code>, ce qui nous permettra de comprendre la stratégie d’optimisation. Elle permet aussi de connaître le volume de données importées lorsqu’on récupère un fichier d’internet. En effet, <code>duckdb</code> est malin: plutôt que de télécharger un fichier entier pour n’en lire qu’une partie, la librairie est capable de n’importer que les blocs du fichier qui l’intéresse.</p>
+<p>Ceci nécessite l’utilisation de l’extension <code>httpfs</code> (un peu l’équivalent des <code>library</code> de <code>R</code> en <code>duckdb</code>). Elle s’installe et s’utilise de la manière suivante</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: false</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(duckdb)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># url_bpe &lt;- "https://www.insee.fr/fr/statistiques/fichier/8217525/BPE23.parquet"</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>url_bpe <span class="ot">&lt;-</span> <span class="st">"https://minio.lab.sspcloud.fr/lgaliana/diffusion/BPE23.parquet"</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>con <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(<span class="fu">duckdb</span>())</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">dbExecute</span>(</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  con,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glue</span>(</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"INSTALL httpfs;"</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"LOAD httpfs;"</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Demandons à <code>DuckDB</code> d’exécuter la requête <em>“beaucoup de colonnes, pas beaucoup de lignes”</em> et regardons le plan d’exécution et les informations données par <code>DuckDB</code>:</p>
+<details>
+<summary>
+Voir le plan : <em>“beaucoup de colonnes, pas beaucoup de lignes”</em>
+</summary>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glue</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'EXPLAIN ANALYZE '</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'SELECT * FROM read_parquet("{url_bpe}") LIMIT 5'</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>plan <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  con,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glue</span>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'EXPLAIN ANALYZE '</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'SELECT * FROM read_parquet("{url_bpe}") LIMIT 5'</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(plan)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<details>
+<summary>
+Voir le plan : <em>“peu de colonnes, beaucoup de lignes”</em>
+</summary>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>plan <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  con,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glue</span>(</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'EXPLAIN ANALYZE '</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'SELECT TYPEQU, LONGITUDE, LATITUDE FROM read_parquet("{url_bpe}") LIMIT 10000'</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(plan)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<p>La comparaison de ces plans d’exécution montre l’intérêt de faire un filtre sur les colonnes : les besoins computationnels sont drastiquement diminués. Le filtre sur les lignes n’arrive que dans un second temps, une fois les colonnes sélectionnées.</p>
+<p>Pourquoi seulement un rapport de 1 à 4 entre le poids des deux fichiers ? C’est parce que nos requêtes comportent toute deux la variable <code>IPONDI</code> (les poids à utiliser pour extrapoler l’échantillon à la population) qui est à haute précision là où beaucoup d’autres colonnes comportent un nombre réduit de modalités et sont donc peu volumineuses.</p>
+</section>
+</section>
+<section id="le-partitionnement" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Le partitionnement</h1>
+<p>La <em>lazy evaluation</em> et les optimisations d’<code>Arrow</code> apportent des gain de performance considérables. Mais on peut encore faire mieux ! Lorsqu’on sait qu’on va être amené à <strong>filter régulièrement les données selon une variable d’intérêt</strong>, on a tout intérêt à <strong>partitionner</strong> le fichier <code>Parquet</code> selon cette variable.</p>
+<div class="callout callout-style-default callout-exercise callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Partie 3 : Le <code>Parquet</code> partitionné
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Parcourir la documentation de la fonction <a href="https://arrow.apache.org/docs/r/reference/write_dataset.html">arrow::write_dataset</a> pour comprendre comment spécifier la clé de partitionnement d’un fichier <code>Parquet</code>. Plusieurs méthodes sont possibles !</li>
+<li>Importer la table individus complète du recensement <code>data/RPindividus.parquet</code> avec la fonction <a href="https://arrow.apache.org/docs/r/reference/open_dataset.html">arrow::open_dataset</a> et l’exporter en une table <code>data/RPindividus_partitionne.parquet</code> partitionnée par la région (<code>REGION</code>) et le département (<code>DEPT</code>)</li>
+<li>Observer l’arborescence de fichiers de la table exportée</li>
+<li>Modifier la fonction <code>req_open_dataset</code> de la partie précédente pour partir de la table complète (non-partitionnée) <code>data/RPindividus.parquet</code> au lieu de l’échantillon</li>
+<li>Construire une fonction <code>req_open_dataset_partitionne</code> sur le modèle de <code>req_open_dataset</code>, qui importe cette fois les données partitionnées <code>data/RPindividus_partitionne.parquet</code>. Ne pas oublier de spécifier le paramètre <code>hive_style = TRUE</code>.</li>
+<li>Comparer les performances (temps d’exécution et allocation mémoire) des deux méthodes grâce à la fonction <a href="https://bench.r-lib.org/#benchmark">bench::mark</a></li>
+</ul>
+</div>
+</div>
+<iframe src="./bench/mark3.html" style="width: 100%; border-style: none; height: 0; overflow: hidden" onload="resizeIframe(this)">
+</iframe>
+</section>
+<section id="duckdb-ou-arrow" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> <code>DuckDB</code> ou <code>Arrow</code> ?</h1>
+<p>La réponse dépend des préférences de chacun. Les deux écosystèmes sont très bien. <code>DuckDB</code> est pensé pour sa simplicité d’usage et son universalité: en principe, qu’on fasse du <i class="fa-brands fa-python" aria-label="python"></i>, <i class="fa-brands fa-r-project" aria-label="r-project"></i>, <i class="fa-brands fa-js-square" aria-label="js-square"></i> ou de la ligne de commande, on pourra utiliser le même code SQL, seule la définition de la connection changera. <code>Arrow</code> propose une syntaxe un peu moins familière mais l’intégration au <code>tidyverse</code> rend ce <em>framework</em> beaucoup plus facile d’usage que si on devait directement utiliser <code>Arrow</code>.</p>
+<p>Il existe aussi des clients plus hauts niveau pour <code>duckdb</code>: c’est notamment le cas de la connection entre <code>duckdb</code> et <code>tidyverse</code> permise en <i class="fa-brands fa-r-project" aria-label="r-project"></i>. Ceux-ci permettent des opérations de manipulation de données plus complexes: si le SQL de <code>DuckDB</code> est déjà plus simple d’usage que celui de <code>PostGre</code>, on reste limité pour des opérations complexes de (dé)structuration de données: le client <code>tidyverse</code> apporte les avantages de cet écosystème en plus de ceux de <code>DuckDB</code>.</p>
+</section>
+<section id="geoparquet-et-duckdb-pour-les-données-spatiales" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> <code>(Geo)Parquet</code> et <code>DuckDB</code> pour les données spatiales</h1>
+<p>Nous proposons, pour illustrer l’un des atouts de <code>DuckDB</code>, à savoir sa simplicité d’usage sur des problèmes complexes, de faire du traitement de données spatiales. Pour cela, nous allons faire une tâche lourde: restreindre des données spatiales à partir de leur appartenance à une zone géographique donnée. Cette dernière sera définie géométriquement comme un triangle dont deux des coins correspondent aux anciens bâtiments de l’Insee à Malakoff.</p>
+<p>L’import des contours dont nous aurons besoin en <i class="fa-brands fa-r-project" aria-label="r-project"></i> se fait assez naturellement grâce à <a href="https://r-spatial.github.io/sf/"><code>sf</code></a>.</p>
+<section id="récupération-des-données" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="récupération-des-données"><span class="header-section-number">6.1</span> Récupération des données</h2>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: false</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"data"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">"https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/triangle.geojson"</span>, <span class="st">"data/triangle.geojson"</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">"https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/malakoff.geojson"</span>, <span class="st">"data/malakoff.geojson"</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">"https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/montrouge.geojson"</span>, <span class="st">"data/montrouge.geojson"</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">"https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/geoparquet/dvf.parquet"</span>, <span class="st">"data/dvf.parquet"</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">"https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/geoparquet/carreaux.parquet"</span>, <span class="st">"data/carreaux.parquet"</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>triangle <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(<span class="st">"data/triangle.geojson"</span>, <span class="at">quiet=</span><span class="cn">TRUE</span>)</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>malakoff <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(<span class="st">"data/malakoff.geojson"</span>, <span class="at">quiet=</span><span class="cn">TRUE</span>)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>montrouge <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(<span class="st">"data/montrouge.geojson"</span>, <span class="at">quiet=</span><span class="cn">TRUE</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>On peut visualiser la ville de <code>Malakoff</code> et notre zone d’intérêt (qu’on nommera, par abus de langage, le triangle d’or de Malakoff):</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mapview</span>(malakoff) <span class="sc">+</span> <span class="fu">mapview</span>(triangle, <span class="at">col.regions =</span> <span class="st">"#ffff00"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Nous utiliserons aussi les contours de Montrouge pour cette partie:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mapview</span>(montrouge)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>En principe, <code>duckdb</code> fonctionne à la manière d’une base de données. Autrement dit, on définit une base de données et effectue des requêtes (SQL ou verbes <code>tidyverse</code>) dessus. Pour créer une base de données, il suffit de faire un <code>read_parquet</code> avec le chemin du fichier.</p>
+<p>Comme il n’est pas possible de distinguer cette zone par requêtes attributaires, nous proposons de :</p>
+<ol type="1">
+<li>Via <code>DuckDB</code>, extraire les transactions de l’ensemble de la commune de Malakoff tout en conservant leur caractère spatial (chaque transaction correspond à un point géographique, avec ses coordonnées xy).</li>
+<li>Utiliser localement le package <code>sf</code> pour distinguer spatialement les transactions effectuées à l’intérieur ou à l’extérieur du Triangle d’Or (dont nous fournissons les contours).</li>
+<li>Calculer la médiane des prix dans les deux sous-zones.</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Format des géométries
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>On extrait les transactions de Malakoff. Pour information, dans le fichier <code>dvf.parquet</code>, les coordonnées spatiales sont stockées dans un format binaire spécifique (Well-Known Binary - WKB). Ce format est efficace pour le stockage et les calculs, mais n’est pas directement lisible ou interprétable par les humains.</p>
+<p>En transformant ces géométries en une représentation texte lisible (Well-Known Text - WKT) avec <code>ST_AsText</code>, on rend les données spatiales faciles à afficher, interpréter ou manipuler dans des contextes qui ne supportent pas directement les formats binaires géospatiaux.</p>
 </div>
 </div>
 </div>
-</a>
+</section>
+<section id="spatial-join-avec-duckdb" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="spatial-join-avec-duckdb"><span class="header-section-number">6.2</span> <em>Spatial join</em> avec <code>DuckDB</code></h2>
+<p>Pour cet exercice, nous allons utiliser les variables suivantes:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>cog_malakoff <span class="ot">&lt;-</span> <span class="st">"92046"</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>cog_montrouge <span class="ot">&lt;-</span> <span class="st">"92049"</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>et le geoparquet pourra être interprété par <code>duckdb</code> selon ce modèle:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>FROM <span class="fu">read_parquet</span>(<span class="st">'data/dvf.parquet'</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>SELECT</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  XXXX,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ST_AsText</span>(geometry) AS geom_text</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>WHERE XXXX</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>La base de données se crée tout simplement de la manière suivante :</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: false</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>con <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(duckdb<span class="sc">::</span><span class="fu">duckdb</span>())</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dbExecute</span>(con, <span class="st">"INSTALL spatial;"</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dbExecute</span>(con, <span class="st">"LOAD spatial;"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-style-default callout-exercise callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercice 3
 </div>
 </div>
-<div class="listing-no-matching d-none">
-Aucun article correspondant
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p>En vous inspirant du <em>template</em> ci-dessus, créer un <em>dataframe</em> <code>transactions_malakoff</code> qui recense les transactions dans cette charmante bourgade.</p></li>
+<li><p>A ce niveau, les transactions extraites sont maintenant chargées en mémoire et on les transforme dans un format qui facilite leur manipulation en R via le package <code>sf</code>.</p></li>
+</ol>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>transactions_malakoff <span class="ot">&lt;-</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  sf<span class="sc">::</span><span class="fu">st_as_sf</span>(transactions_malakoff, <span class="at">wkt =</span> <span class="st">"geom_text"</span>, <span class="at">crs =</span> <span class="dv">2154</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">geometry=</span>geom_text)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="3" type="1">
+<li>Nous allons créer un masque pour reconnaître les transactions qui sont situées ou non dans le triangle d’or. Utiliser la structure suivante pour créer ce masque :</li>
+</ol>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>bool_mask <span class="ot">&lt;-</span> transactions_malakoff <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ... |&gt;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  sf<span class="sc">::</span><span class="fu">st_intersects</span>(triangle, <span class="at">sparse =</span> <span class="cn">FALSE</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>⚠️ il faut tenir compte des projections géographiques avant de faire l’opération d’intersection. Ce code est donc à amender à la marge pour pouvoir faire l’intersection.</p>
+<p>Cela donne un vecteur de booléen, on peut donc identifier les transactions dans le triangle d’or ou en dehors à partir de celui-ci.</p>
 </div>
 </div>
-<section id="replays-des-sessions" class="level2">
-<h2 class="anchored" data-anchor-id="replays-des-sessions"><em>Replays</em> des sessions</h2>
-<p>A venir</p>
+<p>Ci-dessous le dataframe brut extrait via Duckdb (réponse 1).</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>query2 <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM read_parquet('data/dvf.parquet')</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="st">        code_commune,</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="st">        valeur_fonciere,</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="st">        ST_AsText(geometry) AS geom_text</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="st">    WHERE code_commune = '{cog_malakoff}'</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>transactions_malakoff <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(con, query2)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(transactions_malakoff, <span class="dv">3</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Ci-dessous, le dataframe transformé en objet <code>sf</code> et prêt pour les opérations spatiales (réponse 2) :</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>transactions_malakoff <span class="ot">&lt;-</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  sf<span class="sc">::</span><span class="fu">st_as_sf</span>(transactions_malakoff, <span class="at">wkt =</span> <span class="st">"geom_text"</span>, <span class="at">crs =</span> <span class="dv">2154</span>) <span class="sc">|&gt;</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">geometry=</span>geom_text)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(transactions_malakoff, <span class="dv">3</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Une fois les données prêtes, on intersecte les points avec le triangle représentant le centre-ville de Malakoff (question 3)</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>bool_mask <span class="ot">&lt;-</span> transactions_malakoff <span class="sc">|&gt;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  sf<span class="sc">::</span><span class="fu">st_transform</span>(<span class="dv">4326</span>) <span class="sc">|&gt;</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  sf<span class="sc">::</span><span class="fu">st_intersects</span>(triangle, <span class="at">sparse =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bool_mask)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>On peut ensuite facilement créer nos deux espaces de Malakoff :</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>in_triangle <span class="ot">&lt;-</span> transactions_malakoff[bool_mask,]</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>out_triangle <span class="ot">&lt;-</span> transactions_malakoff[<span class="sc">!</span>bool_mask,]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Une fois que chaque transaction est identifiée comme étant à l’intérieur ou à l’extérieur du Triangle, le calcul de la médiane des prix est immédiat.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>median_in <span class="ot">&lt;-</span> <span class="fu">median</span>(in_triangle<span class="sc">$</span>valeur_fonciere)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>median_out <span class="ot">&lt;-</span> <span class="fu">median</span>(out_triangle<span class="sc">$</span>valeur_fonciere)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">glue</span>(<span class="st">"Médiane des prix dans le Triangle d'Or de Malakoff : "</span>, median_in))</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">glue</span>(<span class="st">"Médiane des prix dans le reste de Malakoff : "</span>, median_out))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>La médiane des prix est un peu plus élevée dans le Triangle qu’en dehors. On peut aller au-delà et étudier la distribution des transactions. Bien que la taille d’échantillon soit réduite, on a ainsi une idée de la diversité des prix dans cette bucolique commune de Malakoff.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-fold: true</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Produire la figure sur la distribution du prix des biens"</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>malakoff_identified <span class="ot">&lt;-</span> transactions_malakoff <span class="sc">%&gt;%</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">region =</span> <span class="fu">if_else</span>(<span class="fu">as.logical</span>(bool_mask), <span class="st">"Triangle d'or"</span>, <span class="st">"Hors triangle d'or"</span>)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  malakoff_identified,</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">y =</span> valeur_fonciere, <span class="at">x =</span> region, <span class="at">fill =</span> region)</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">trans =</span> <span class="st">"log10"</span>,</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">comma_format</span>(),</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">trans_breaks</span>(<span class="st">"log10"</span>, <span class="cf">function</span>(x) <span class="dv">10</span><span class="sc">^</span>x)</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">height =</span> <span class="dv">0</span>, <span class="at">width =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Valeur de vente (€)"</span>) <span class="sc">+</span></span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Tout ceci ne nous dit rien de la différence entre les biens dans le triangle et en dehors de celui-ci. Nous n’avons fait aucun contrôle sur les caractéristiques des biens. Nous laissons les curieux explorer la mine d’or qu’est cette base.</p>
+</section>
+</section>
+<section id="accéder-directement-à-des-données-sur-s3" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Accéder directement à des données sur <code>S3</code></h1>
+<p>En premier lieu, la bonne pratique est de définir la connexion à <code>S3</code> par le biais de secrets <code>DuckDB</code>:</p>
+<div id="8cefee60" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckdb </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>con <span class="op">=</span> duckdb.<span class="ex">connect</span>(database<span class="op">=</span><span class="st">":memory:"</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>con.execute(</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"""</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="ss">CREATE SECRET secret_ls3 (</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="ss">    TYPE S3,</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="ss">    KEY_ID '</span><span class="sc">{</span>os<span class="sc">.</span>environ[<span class="st">"AWS_ACCESS_KEY_ID"</span>]<span class="sc">}</span><span class="ss">',</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="ss">    SECRET '</span><span class="sc">{</span>os<span class="sc">.</span>environ[<span class="st">"AWS_SECRET_ACCESS_KEY"</span>]<span class="sc">}</span><span class="ss">',</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="ss">    ENDPOINT '</span><span class="sc">{</span>os<span class="sc">.</span>environ[<span class="st">"AWS_S3_ENDPOINT"</span>]<span class="sc">}</span><span class="ss">',</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="ss">    SESSION_TOKEN '</span><span class="sc">{</span>os<span class="sc">.</span>environ[<span class="st">"AWS_SESSION_TOKEN"</span>]<span class="sc">}</span><span class="ss">',</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="ss">    REGION 'us-east-1',</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="ss">    URL_STYLE 'path'</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="ss">);</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Il suffit ensuite de faire un <code>read_parquet</code> en préfixant par <code>s3://</code>. La lecture se passera comme si on était en local:</p>
+<div id="f144475c" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> (</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"FROM read_parquet('s3://projet-formation/bonnes-pratiques/data/RPindividus.parquet') "</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SELECT IPONDI AS poids, COLUMNS('.*AGE.*')"</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>con.sql(query)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>On peut bien sûr faire des opérations plus complexes, par exemple calculer une pyramide des âges par département par le biais d’une requête SQL:</p>
+<div id="4a9991c8" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>pyramide <span class="op">=</span> con.sql(<span class="st">"""</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM read_parquet('s3://projet-formation/bonnes-pratiques/data/RPindividus.parquet')</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT </span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="st">        CAST(FLOOR(AGED / 10) * 10 AS INT) AS tranche_age,</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="st">        CAST(SUM(IPONDI) AS INT) AS poids,</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="st">        DEPT</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="st">    GROUP BY tranche_age, DEPT</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="st">    ORDER BY tranche_age, DEPT</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>).to_df()</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>pyramide</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Représentons celle-ci sur une carte. Récupérons le fond de carte des départements avec <code>cartiflette</code>:</p>
+<div id="5833b353" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cartiflette <span class="im">import</span> carti_download</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>shp_communes <span class="op">=</span> carti_download(</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    values <span class="op">=</span> [<span class="st">"France"</span>],</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    crs <span class="op">=</span> <span class="dv">4326</span>,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    borders <span class="op">=</span> <span class="st">"DEPARTEMENT"</span>,</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    vectorfile_format<span class="op">=</span><span class="st">"topojson"</span>,</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    simplification<span class="op">=</span><span class="dv">50</span>,</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    filter_by<span class="op">=</span><span class="st">"FRANCE_ENTIERE_DROM_RAPPROCHES"</span>,</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    source<span class="op">=</span><span class="st">"EXPRESS-COG-CARTO-TERRITOIRE"</span>,</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>    year<span class="op">=</span><span class="dv">2022</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>shp_communes.head(<span class="dv">2</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Calculons la part de chaque classe d’âge pour neutraliser l’effet taille:</p>
+<div id="a7ec7edc" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>donnees_carte <span class="op">=</span> (</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    shp_communes</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    .merge(pyramide, left_on<span class="op">=</span><span class="st">"INSEE_DEP"</span>, right_on<span class="op">=</span><span class="st">"DEPT"</span>)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>donnees_carte[<span class="st">"proportion"</span>] <span class="op">=</span> donnees_carte[<span class="st">"poids"</span>] <span class="op">/</span> donnees_carte[<span class="st">"POPULATION"</span>]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Et voici les cartes, obtenues simplement:</p>
+<div id="a01e36d1" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> (</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    ggplot(donnees_carte.loc[donnees_carte[<span class="st">"tranche_age"</span>] <span class="op">==</span> <span class="dv">30</span>]) <span class="op">+</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    geom_map(aes(fill <span class="op">=</span> <span class="st">"proportion"</span>)) <span class="op">+</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    theme_light() <span class="op">+</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    labs(title <span class="op">=</span> <span class="st">"Part des trentenaires dans la population"</span>)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="2e4b6f16" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> (</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    ggplot(donnees_carte.loc[donnees_carte[<span class="st">"tranche_age"</span>] <span class="op">==</span> <span class="dv">60</span>]) <span class="op">+</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    geom_map(aes(fill <span class="op">=</span> <span class="st">"proportion"</span>)) <span class="op">+</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    theme_light() <span class="op">+</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    labs(title <span class="op">=</span> <span class="st">"Part des soixantenaires dans la population"</span>)</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="données-partitionnées" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="données-partitionnées"><span class="header-section-number">7.1</span> Données partitionnées</h2>
+<p>On peut faire la même chose avec des données partitionnées:</p>
+<div id="99d27bfd" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>con.sql(<span class="st">"SELECT * FROM read_parquet('s3://projet-formation/bonnes-pratiques/data/RPindividus/**/*.parquet', hive_partitioning = true) WHERE DEPT IN (11, 31, 34)"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
-
+</section>
 </section>
 
 </main> <!-- /main -->
