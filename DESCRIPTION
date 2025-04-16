@@ -17,4 +17,5 @@ Imports:
     ggplot2,
     glue,
     gt,
-    stringr
+    stringr,
+    gtExtras
