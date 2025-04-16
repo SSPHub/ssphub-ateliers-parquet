@@ -26,11 +26,6 @@ WORKDIR /app
 RUN R -e "install.packages(c('devtools'))" && \
     R -e "devtools::install_deps(upgrade='never')"
 
-# Installer Quarto (version 1.6.42 spécifiée)
-RUN curl -fsSL https://quarto.org/download/v1.6.42/quarto-1.6.42-linux-amd64.deb -o quarto.deb && \
-    dpkg -i quarto.deb && \
-    rm quarto.deb
-
 # Copier le reste des fichiers (optionnel)
 # COPY . /app
 
