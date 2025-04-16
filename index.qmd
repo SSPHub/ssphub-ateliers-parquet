@@ -507,3 +507,108 @@ Tout ceci ne nous dit rien de la différence entre les biens dans le triangle et
 
 {{< include "./python/_s3.qmd" >}}
 
+# DuckDB WASM
+
+`DuckDB` permet aussi de faire des traitements analytiques directement dans le navigateur grâce à son implémentation WASM. 
+C'est particulièrement pratique pour créer des applications réactives comme celle-ci :
+
+```{ojs}
+//| echo: false
+html`
+  <div style="display: flex; flex-direction: column; gap: 1rem;">
+
+    <!-- Search bar at the top -->
+    <div>${viewof search}</div>
+
+    <!-- Two-column block -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; backgroundColor: '#293845';">
+      <div>${produce_histo(dvf)}</div>
+      <div>${viewof table_dvf}</div>
+    </div>
+
+
+  </div>
+`
+```
+
+```{ojs}
+//| echo: false
+{
+  const container = html`<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <div id="map" style="height: 500px;"></div>`
+
+  yield container
+
+  const map = L.map('map');
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  const geoLayer = L.geoJSON(dvf_geojson, {
+    onEachFeature: (feature, layer) => {
+      const props = feature.properties;
+      const popupContent = `
+        <strong>Date:</strong> ${props.date}<br>
+        <strong>Valeur foncière:</strong> ${props.valeur_fonciere} €<br>
+        <strong>Commune:</strong> ${props.code_commune}
+      `;
+      layer.bindPopup(popupContent);
+    }
+  }).addTo(map);
+
+  // 👇 Automatically fit view to all points
+  map.fitBounds(geoLayer.getBounds());
+}
+```
+
+{{< include "_interactive_parquet.qmd" >}}
+
+
+```{ojs}
+//| echo: false
+viewof table_dvf = Inputs.table(dvf, {columns: ["date", "valeur_fonciere"], rows: 15})
+
+produce_histo = function(dvf){
+  const histo = Plot.plot({
+  style: {backgroundColor: "transparent"},
+  marks: [
+    Plot.rectY(dvf, Plot.binX({y: "count"}, {x: "valeur_fonciere", fill: "#ff562c"})),
+    Plot.ruleY([0])
+  ]
+})
+  return histo
+}
+```
+
+
+```{ojs}
+//| echo: false
+dvf_geojson = {
+ 
+  const geojson = {
+    type: "FeatureCollection",
+    features: dvf.map(row => ({
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [row.longitude, row.latitude],
+      },
+      properties: {
+        date: row.date,
+        valeur_fonciere: row.valeur_fonciere,
+        code_commune: row.code_commune,
+        valeur_fonciere_bar: row.valeur_fonciere_bar,
+      },
+    })),
+  };
+
+  return geojson
+}
+```
+
+Que ce soit avec `Quarto` (comme ici) ou par le biais d'`Observable` (comme [là](https://observablehq.com/@linogaliana/atelier-parquet-ssphub)), il est donc possible de construire des applications interactives reposant sur des sites statiques, sans avoir besoin d'un serveur {{< fa brands r-project >}} ou {{< fa brands python >}}.
