@@ -2,7 +2,6 @@ project:
   type: website
   render:
     - index.qmd
-    - parquet.qmd
   execute-dir: project
 
 custom-callout:
