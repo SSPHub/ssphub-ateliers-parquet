@@ -36,7 +36,18 @@ pour les afficher en plein écran._
 
 <details>
 
+
 <summary>
+
+Regarder le _replay_ de la session _live_ du 09 Avril 2025:
+
+</summary>
+
+{{< video https://minio.lab.sspcloud.fr/lgaliana/ssphub/replay/20250416_masterclass_parquet/GMT20250416-130715_Recording_1686x768.mp4 >}}
+
+
+</details>
+
 
 # Introduction
 
