@@ -9,6 +9,35 @@ image: https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/serveurpyt
 ---
 
 
+
+<a href="https://datalab.sspcloud.fr/launcher/ide/rstudio?name=Atelier%20Parquet%20SSPHub&shared=false&version=2.2.6&persistence.size=«19Gi»&init.personalInit=«https%3A%2F%2Fraw.githubusercontent.com%2FSSPHub%2Fssphub-ateliers-parquet%2Frefs%2Fheads%2Fmain%2Finit_r.sh»&networking.user.enabled=true&autoLaunch=true" target="_blank" rel="noopener"><img src="https://img.shields.io/badge/SSP%20Cloud-Ouvrir_dans_RStudio-blue?logo=r&amp;logoColor=blue" alt="Onyxia"></a>
+<a href="https://github.com/InseeFrLab/ssphub-ateliers/tree/main/R" target="_blank" rel="noopener" data-original-href="https://github.com/InseeFrLab/ssphub-ateliers/tree/main/R"><img src="https://custom-icon-badges.demolab.com/badge/download--r--script-black.svg?logo=download-cloud&logoSource=feather" alt="Onyxia"></a><br>
+
+<a href="https://datalab.sspcloud.fr/launcher/ide/vscode-python?name=SSPHub-Atelier-Parquet&shared=false&version=2.2.12&init.personalInit=«https%3A%2F%2Fgithub.com%2FSSPHub%2Fssphub-ateliers-parquet%2Fblob%2Fmain%2Finit_python.sh»&networking.user.enabled=true&autoLaunch=true" target="_blank" rel="noopener" data-original-href="https://datalab.sspcloud.fr/launcher/ide/vscode-python?name=SSPHub-Atelier-Parquet&shared=false&version=2.2.12&init.personalInit=«https%3A%2F%2Fgithub.com%2FSSPHub%2Fssphub-ateliers-parquet%2Fblob%2Fmain%2Finit_python.sh»&networking.user.enabled=true&autoLaunch=true"><img src="https://custom-icon-badges.demolab.com/badge/SSP%20Cloud-Lancer_avec_VSCode-blue?logo=vsc&amp;logoColor=white" alt="Onyxia"></a>
+<a href="https://github.com/SSPHub/ssphub-ateliers-parquet/blob/main/python/_s3.qmd" target="_blank" rel="noopener" data-original-href="https://github.com/SSPHub/ssphub-ateliers-parquet/blob/main/python/_s3.qmdb"><img src="https://custom-icon-badges.demolab.com/badge/download--notebook-black.svg?logo=download-cloud&logoSource=feather" alt="Onyxia"></a><br>
+
+
+<details open>
+
+<summary>
+
+Afficher les _slides_ associées
+
+</summary>
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><iframe class="sourceCode yaml code-with-copy" src="https://inseefrlab.github.io/ssphub-ateliers-slides/slides-data/index.html#/title-slide"></iframe></div>
+
+
+_[Cliquer ici](https://inseefrlab.github.io/ssphub-ateliers-slides/slides-data/index.html#/title-slide){target="_blank"}
+pour les afficher en plein écran._
+
+</details>
+
+
+<details>
+
+<summary>
+
 # Introduction
 
 Tout au long de ce tutoriel guidé, nous allons voir comment utiliser le format `Parquet` de manière la plus efficiente.

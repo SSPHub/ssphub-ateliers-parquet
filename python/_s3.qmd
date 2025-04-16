@@ -110,7 +110,7 @@ map = (
 map
 ```
 
-## Données partitionnées
+## Données partitionnées {-}
 
 On peut faire la même chose avec des données partitionnées:
 
