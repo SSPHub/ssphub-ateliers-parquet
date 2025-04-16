@@ -29,7 +29,8 @@ jobs:
           version: 1.6.43
       - name: Render website
         run: |
-          pip install nbclient nbformat jupyter-cache
+          pip install uv
+          uv pip install -r requirements.txt
           quarto render --to html
         env:
             TOKEN_API_INSEE:  ${{ secrets.TOKEN_API_INSEE }}
