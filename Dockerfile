@@ -24,7 +24,6 @@ WORKDIR /app
 
 # Installer les dépendances R via {remotes} et {pak} (comme `setup-r-dependencies`)
 RUN R -e "install.packages(c('devtools'))" && \
-    cd app/ && \
     R -e "devtools::install_deps(upgrade='never')"
 
 # Installer Quarto (version 1.6.42 spécifiée)
