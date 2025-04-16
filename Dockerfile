@@ -18,7 +18,7 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY DESCRIPTION app/DESCRIPTION
+COPY DESCRIPTION /app/DESCRIPTION
 
 WORKDIR /app
 
