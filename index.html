@@ -233,7 +233,7 @@ div.callout-exercise.callout-style-default .callout-icon::before, div.callout-ex
 </header>
 
 
-<p><a href="https://datalab.sspcloud.fr/launcher/ide/rstudio?name=Atelier%20Parquet%20SSPHub&amp;shared=false&amp;version=2.2.6&amp;persistence.size=«19Gi»&amp;init.personalInit=«https%3A%2F%2Fraw.githubusercontent.com%2FSSPHub%2Fssphub-ateliers-parquet%2Frefs%2Fheads%2Fmain%2Finit_r.sh»&amp;networking.user.enabled=true&amp;autoLaunch=true" target="_blank" rel="noopener"><img src="https://img.shields.io/badge/SSP%20Cloud-Ouvrir_dans_RStudio-blue?logo=r&amp;logoColor=blue" alt="Onyxia"></a> <a href="https://github.com/InseeFrLab/ssphub-ateliers/tree/main/R" target="_blank" rel="noopener" data-original-href="https://github.com/InseeFrLab/ssphub-ateliers/tree/main/R"><img src="https://custom-icon-badges.demolab.com/badge/download--r--script-black.svg?logo=download-cloud&amp;logoSource=feather" alt="Onyxia"></a><br> <a href="https://datalab.sspcloud.fr/launcher/ide/vscode-python?name=SSPHub-Atelier-Parquet&amp;shared=false&amp;version=2.2.12&amp;init.personalInit=«https%3A%2F%2Fgithub.com%2FSSPHub%2Fssphub-ateliers-parquet%2Fblob%2Fmain%2Finit_python.sh»&amp;networking.user.enabled=true&amp;autoLaunch=true" target="_blank" rel="noopener" data-original-href="https://datalab.sspcloud.fr/launcher/ide/vscode-python?name=SSPHub-Atelier-Parquet&amp;shared=false&amp;version=2.2.12&amp;init.personalInit=«https%3A%2F%2Fgithub.com%2FSSPHub%2Fssphub-ateliers-parquet%2Fblob%2Fmain%2Finit_python.sh»&amp;networking.user.enabled=true&amp;autoLaunch=true"><img src="https://custom-icon-badges.demolab.com/badge/SSP%20Cloud-Lancer_avec_VSCode-blue?logo=vsc&amp;logoColor=white" alt="Onyxia"></a> <a href="https://github.com/SSPHub/ssphub-ateliers-parquet/blob/main/python/_s3.qmd" target="_blank" rel="noopener" data-original-href="https://github.com/SSPHub/ssphub-ateliers-parquet/blob/main/python/_s3.qmdb"><img src="https://custom-icon-badges.demolab.com/badge/download--notebook-black.svg?logo=download-cloud&amp;logoSource=feather" alt="Onyxia"></a><br></p>
+<p><a href="https://datalab.sspcloud.fr/launcher/ide/rstudio?name=Atelier%20Parquet%20SSPHub&amp;shared=false&amp;version=2.2.6&amp;persistence.size=«19Gi»&amp;init.personalInit=«https%3A%2F%2Fraw.githubusercontent.com%2FSSPHub%2Fssphub-ateliers-parquet%2Frefs%2Fheads%2Fmain%2Finit_r.sh»&amp;networking.user.enabled=true&amp;autoLaunch=true" target="_blank" rel="noopener"><img src="https://img.shields.io/badge/SSP%20Cloud-Ouvrir_dans_RStudio-blue?logo=r&amp;logoColor=blue" alt="Onyxia"></a> <a href="https://github.com/InseeFrLab/ssphub-ateliers/tree/main/R" target="_blank" rel="noopener" data-original-href="https://github.com/InseeFrLab/ssphub-ateliers/tree/main/R"><img src="https://custom-icon-badges.demolab.com/badge/download--r--script-black.svg?logo=download-cloud&amp;logoSource=feather" alt="Onyxia"></a><br> <a href="https://datalab.sspcloud.fr/launcher/ide/vscode-python?name=SSPHub-Atelier-Parquet&amp;shared=false&amp;version=2.2.12&amp;init.personalInit=«https%3A%2F%2Fraw.githubusercontent.com%2FSSPHub%2Fssphub-ateliers-parquet%2Frefs%2Fheads%2Fmain%2Finit_python.sh»&amp;networking.user.enabled=true&amp;autoLaunch=true" target="_blank" rel="noopener" data-original-href="https://datalab.sspcloud.fr/launcher/ide/vscode-python?name=SSPHub-Atelier-Parquet&amp;shared=false&amp;version=2.2.12&amp;init.personalInit=«https%3A%2F%2Fraw.githubusercontent.com%2FSSPHub%2Fssphub-ateliers-parquet%2Frefs%2Fheads%2Fmain%2Finit_python.sh»&amp;networking.user.enabled=true&amp;autoLaunch=true"><img src="https://custom-icon-badges.demolab.com/badge/SSP%20Cloud-Lancer_avec_VSCode-blue?logo=vsc&amp;logoColor=white" alt="Onyxia"></a> <a href="https://github.com/SSPHub/ssphub-ateliers-parquet/blob/main/python/_s3.qmd" target="_blank" rel="noopener" data-original-href="https://github.com/SSPHub/ssphub-ateliers-parquet/blob/main/python/_s3.qmdb"><img src="https://custom-icon-badges.demolab.com/badge/download--notebook-black.svg?logo=download-cloud&amp;logoSource=feather" alt="Onyxia"></a><br></p>
 <details open="">
 <summary>
 <p>Afficher les <em>slides</em> associées</p>
@@ -792,7 +792,7 @@ Exercice 3
 <section id="accéder-directement-à-des-données-sur-s3" class="level1" data-number="7">
 <h1 data-number="7"><span class="header-section-number">7</span> Accéder directement à des données sur <code>S3</code></h1>
 <p>En premier lieu, la bonne pratique est de définir la connexion à <code>S3</code> par le biais de secrets <code>DuckDB</code>:</p>
-<div id="4c15aadc" class="cell" data-execution_count="1">
+<div id="b68b2d9e" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckdb </span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -813,7 +813,7 @@ Exercice 3
 <span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Il suffit ensuite de faire un <code>read_parquet</code> en préfixant par <code>s3://</code>. La lecture se passera comme si on était en local:</p>
-<div id="c9154254" class="cell" data-execution_count="2">
+<div id="656d98f6" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> (</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"FROM read_parquet('s3://projet-formation/bonnes-pratiques/data/RPindividus.parquet') "</span></span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SELECT IPONDI AS poids, COLUMNS('.*AGE.*')"</span></span>
@@ -821,7 +821,7 @@ Exercice 3
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>con.sql(query)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut bien sûr faire des opérations plus complexes, par exemple calculer une pyramide des âges par département par le biais d’une requête SQL:</p>
-<div id="e858afb0" class="cell" data-execution_count="3">
+<div id="20bf3fe6" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>pyramide <span class="op">=</span> con.sql(<span class="st">"""</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM read_parquet('s3://projet-formation/bonnes-pratiques/data/RPindividus.parquet')</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT </span></span>
@@ -835,7 +835,7 @@ Exercice 3
 <span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>pyramide</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Représentons celle-ci sur une carte. Récupérons le fond de carte des départements avec <code>cartiflette</code>:</p>
-<div id="40450065" class="cell" data-execution_count="4">
+<div id="adc2fe7d" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cartiflette <span class="im">import</span> carti_download</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>shp_communes <span class="op">=</span> carti_download(</span>
@@ -852,7 +852,7 @@ Exercice 3
 <span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>shp_communes.head(<span class="dv">2</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Calculons la part de chaque classe d’âge pour neutraliser l’effet taille:</p>
-<div id="e1bdb1e7" class="cell" data-execution_count="5">
+<div id="6aa65aa4" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>donnees_carte <span class="op">=</span> (</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    shp_communes</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    .merge(pyramide, left_on<span class="op">=</span><span class="st">"INSEE_DEP"</span>, right_on<span class="op">=</span><span class="st">"DEPT"</span>)</span>
@@ -860,7 +860,7 @@ Exercice 3
 <span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>donnees_carte[<span class="st">"proportion"</span>] <span class="op">=</span> donnees_carte[<span class="st">"poids"</span>] <span class="op">/</span> donnees_carte[<span class="st">"POPULATION"</span>]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Et voici les cartes, obtenues simplement:</p>
-<div id="859e642d" class="cell" data-execution_count="6">
+<div id="9acddb2a" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> (</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    ggplot(donnees_carte.loc[donnees_carte[<span class="st">"tranche_age"</span>] <span class="op">==</span> <span class="dv">30</span>]) <span class="op">+</span></span>
@@ -870,7 +870,7 @@ Exercice 3
 <span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="f8a32f9d" class="cell" data-execution_count="7">
+<div id="ec315763" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> (</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    ggplot(donnees_carte.loc[donnees_carte[<span class="st">"tranche_age"</span>] <span class="op">==</span> <span class="dv">60</span>]) <span class="op">+</span></span>
@@ -883,7 +883,7 @@ Exercice 3
 <section id="données-partitionnées" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="données-partitionnées">Données partitionnées</h2>
 <p>On peut faire la même chose avec des données partitionnées:</p>
-<div id="938869e9" class="cell" data-execution_count="8">
+<div id="24b0ca2a" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>con.sql(<span class="st">"SELECT * FROM read_parquet('s3://projet-formation/bonnes-pratiques/data/RPindividus/**/*.parquet', hive_partitioning = true) WHERE DEPT IN (11, 31, 34)"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
