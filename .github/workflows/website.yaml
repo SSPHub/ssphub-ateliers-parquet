@@ -29,6 +29,7 @@ jobs:
           version: 1.6.43
       - name: Render website
         run: |
+          pip install nbclient nbformat 
           quarto render --to html
         env:
             TOKEN_API_INSEE:  ${{ secrets.TOKEN_API_INSEE }}
