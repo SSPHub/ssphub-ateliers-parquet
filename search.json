@@ -1,17 +1,10 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Atelier pour découvrir la récupération de données via avec le format Parquet",
-    "section": "",
-    "text": "Tout au long de ce tutoriel guidé, nous allons voir comment utiliser le format Parquet de manière la plus efficiente.\nAfin de comparer les différents formats et méthodes d’utilisation, nous allons généralement comparer le temps d’exécution et l’usage mémoire d’une requête standard.\n\n\nAu cours de cet atelier, nous aurons besoin des packages suivants:\n#| output: false\nlibrary(duckdb)\nlibrary(glue)\nlibrary(DBI)\nlibrary(dplyr)\nlibrary(dbplyr)\nlibrary(mapview)\nCe tutoriel s’appuie sur des données ouvertes diffusées au format Parquet. Pour les récupérer, vous pouvez exécuter le script suivant:\n\n\nRécupérer les données\n\nlibrary(arrow)\nlibrary(dplyr)\nlibrary(readr)\nlibrary(fs)\n\n# Chemin du fichier d'entrée\nfilename_table_individu &lt;- \"data/RPindividus.parquet\"\n\n# Lire le fichier Parquet\ndf &lt;- read_parquet(filename_table_individu)\n\n# Filtrer les données pour REGION == \"24\"\ndf_filtered &lt;- df %&gt;% filter(REGION == \"24\")\n\n# Sauvegarder en CSV\nwrite_csv(df_filtered, \"data/RPindividus_24.csv\")\n\n# Sauvegarder en Parquet\nwrite_parquet(df_filtered, \"data/RPindividus_24.parquet\")\n\n# Créer le dossier si nécessaire\ndir_create(\"data/RPindividus\")\n\n# Sauvegarder en Parquet partitionné par REGION et DEPT\nwrite_dataset(\n  df,\n  path = \"data/RPindividus\",\n  format = \"parquet\",\n  partitioning = c(\"REGION\", \"DEPT\")\n)"
-  },
-  {
     "objectID": "index.html#etapes-préliminaires",
     "href": "index.html#etapes-préliminaires",
     "title": "Atelier pour découvrir la récupération de données via avec le format Parquet",
-    "section": "",
-    "text": "Au cours de cet atelier, nous aurons besoin des packages suivants:\n#| output: false\nlibrary(duckdb)\nlibrary(glue)\nlibrary(DBI)\nlibrary(dplyr)\nlibrary(dbplyr)\nlibrary(mapview)\nCe tutoriel s’appuie sur des données ouvertes diffusées au format Parquet. Pour les récupérer, vous pouvez exécuter le script suivant:\n\n\nRécupérer les données\n\nlibrary(arrow)\nlibrary(dplyr)\nlibrary(readr)\nlibrary(fs)\n\n# Chemin du fichier d'entrée\nfilename_table_individu &lt;- \"data/RPindividus.parquet\"\n\n# Lire le fichier Parquet\ndf &lt;- read_parquet(filename_table_individu)\n\n# Filtrer les données pour REGION == \"24\"\ndf_filtered &lt;- df %&gt;% filter(REGION == \"24\")\n\n# Sauvegarder en CSV\nwrite_csv(df_filtered, \"data/RPindividus_24.csv\")\n\n# Sauvegarder en Parquet\nwrite_parquet(df_filtered, \"data/RPindividus_24.parquet\")\n\n# Créer le dossier si nécessaire\ndir_create(\"data/RPindividus\")\n\n# Sauvegarder en Parquet partitionné par REGION et DEPT\nwrite_dataset(\n  df,\n  path = \"data/RPindividus\",\n  format = \"parquet\",\n  partitioning = c(\"REGION\", \"DEPT\")\n)"
+    "section": "1.1 Etapes préliminaires",
+    "text": "1.1 Etapes préliminaires\nAu cours de cet atelier, nous aurons besoin des packages suivants:\n#| output: false\nlibrary(duckdb)\nlibrary(glue)\nlibrary(DBI)\nlibrary(dplyr)\nlibrary(dbplyr)\nlibrary(mapview)\nCe tutoriel s’appuie sur des données ouvertes diffusées au format Parquet. Pour les récupérer, vous pouvez exécuter le script suivant:\n\n\nRécupérer les données\n\nlibrary(arrow)\nlibrary(dplyr)\nlibrary(readr)\nlibrary(fs)\n\n# Chemin du fichier d'entrée\nfilename_table_individu &lt;- \"data/RPindividus.parquet\"\n\n# Lire le fichier Parquet\ndf &lt;- read_parquet(filename_table_individu)\n\n# Filtrer les données pour REGION == \"24\"\ndf_filtered &lt;- df %&gt;% filter(REGION == \"24\")\n\n# Sauvegarder en CSV\nwrite_csv(df_filtered, \"data/RPindividus_24.csv\")\n\n# Sauvegarder en Parquet\nwrite_parquet(df_filtered, \"data/RPindividus_24.parquet\")\n\n# Créer le dossier si nécessaire\ndir_create(\"data/RPindividus\")\n\n# Sauvegarder en Parquet partitionné par REGION et DEPT\nwrite_dataset(\n  df,\n  path = \"data/RPindividus\",\n  format = \"parquet\",\n  partitioning = c(\"REGION\", \"DEPT\")\n)"
   },
   {
     "objectID": "index.html#la-lazy-evaluation-en-pratique",
@@ -45,7 +38,7 @@
     "objectID": "index.html#données-partitionnées",
     "href": "index.html#données-partitionnées",
     "title": "Atelier pour découvrir la récupération de données via avec le format Parquet",
-    "section": "7.1 Données partitionnées",
-    "text": "7.1 Données partitionnées\nOn peut faire la même chose avec des données partitionnées:\n\ncon.sql(\"SELECT * FROM read_parquet('s3://projet-formation/bonnes-pratiques/data/RPindividus/**/*.parquet', hive_partitioning = true) WHERE DEPT IN (11, 31, 34)\")"
+    "section": "Données partitionnées",
+    "text": "Données partitionnées\nOn peut faire la même chose avec des données partitionnées:\n\ncon.sql(\"SELECT * FROM read_parquet('s3://projet-formation/bonnes-pratiques/data/RPindividus/**/*.parquet', hive_partitioning = true) WHERE DEPT IN (11, 31, 34)\")"
   }
 ]
