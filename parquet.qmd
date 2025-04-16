@@ -467,3 +467,4 @@ Tout ceci ne nous dit rien de la différence entre les biens dans le triangle et
 # Accéder directement à des données sur `S3`
 
 
+
