@@ -1,19 +1,470 @@
 ---
-title: "_Masterclass_ du `SSPHub`"
-listing:
-  id: sample-listings
-  contents:
-    - "sessions/*.qmd"
-  sort: "date"
-  type: grid
+title: "Atelier pour découvrir la récupération de données via avec le format Parquet"
+author: Lino Galiana
+date: 2025-04-09
+description: |
+  XXXXX
+number-sections: true
+image: https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/serveurpython.jpg
 ---
 
-Site web en construction
+
+# Introduction
+
+Tout au long de ce tutoriel guidé, nous allons voir comment utiliser le format `Parquet` de manière la plus efficiente.
+
+Afin de comparer les différents formats et méthodes d'utilisation, nous allons généralement **comparer le temps d'exécution et l'usage mémoire d'une requête standard**.
 
 
-::: {#sample-listings}
+## Etapes préliminaires
+
+Au cours de cet atelier, nous aurons besoin des _packages_ suivants:
+
+```{r}
+#| output: false
+library(duckdb)
+library(glue)
+library(DBI)
+library(dplyr)
+library(dbplyr)
+library(mapview)
+```
+
+
+Ce tutoriel s'appuie sur des données ouvertes diffusées au format `Parquet`. Pour les récupérer, vous pouvez exécuter le script suivant:
+
+<details>
+
+<summary>
+Récupérer les données
+</summary>
+
+```{.r include="./R/create_environment.R"}
+```
+
+</details>
+
+# Passer de `CSV` à `Parquet`
+
+Commençons par comparer les formats `CSV` et `Parquet` afin de comprendre les gains qu'apporte déjà ce format. 
+
+Le prochain chapitre propose d'utiliser le _package_ [`bench`](https://bench.r-lib.org/) pour les comparatifs. Il est plus simple d'encapsuler dans ces _benchmarks_ des fonctions: vous pouvez développer le code puis l'intégrer dans une fonction _ad hoc_. 
+
+Pour ce premier exercice, nous proposons d'utiliser `Arrow` pour la lecture des fichiers. Nous verrons ultérieurement comment faire la même chose avec `DuckDB`.
+
+:::{.exercise}
+## Exercice 1 : Du `CSV` au `Parquet` {.unnumbered}
+
+* La requête suivante permet de calculer les données pour construire une pyramide des âges sur un département donné, à partir du fichier `CSV` du recensement. Après l'avoir testée, encapsuler celle-ci dans une fonction `req_csv` (sans argument).
+
+```{.r}
+res <- readr::read_csv("data/RPindividus_24.csv") |>
+    filter(DEPT == "36") |>
+    group_by(AGED, DEPT) |>
+    summarise(n_indiv = sum(IPONDI))
+```
+
+* Sur le même modèle, construire une fonction `req_read_parquet` basée cette fois sur le fichier `data/RPindividus_24.parquet` chargé avec la fonction [read_parquet](https://arrow.apache.org/docs/r/reference/read_parquet.html) d'`Arrow`
+
+* Comparer les performances (temps d'exécution et allocation mémoire) de ces deux méthodes grâce à la fonction [bench::mark](https://bench.r-lib.org/#benchmark), à laquelle on passera les paramètres `iterations = 1` (comparaison à partir d'une seule itération) et `check = FALSE` (autorise les outputs des deux fonctions à être différents).
+
+* Arranger les données pour avoir un tableau de résultats
 :::
 
-## _Replays_ des sessions
+<details>
 
-A venir
+<summary>
+Proposition de correction
+</summary>
+
+```{.r include="./R/benchmark_functions.R"}
+```
+
+```{.r include="./R/exo1.R"}
+```
+
+
+</details>
+
+<script>
+  function resizeIframe(obj) {
+    obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+  }
+</script>
+
+<iframe src="./bench/mark1.html" style="width: 100%; border-style: none; height: 0; overflow: hidden"
+        onload="resizeIframe(this)"></iframe>
+
+
+# Comprendre l'intérêt de la _lazy evaluation_
+
+La partie précédente a montré un **gain de temps considérable** du passage de `CSV` à `Parquet`. Néanmoins, l'**utilisation mémoire était encore très élevée** alors qu'on utilise de fait qu'une infime partie du fichier. 
+
+Dans cette partie, on va voir comment utiliser la ***lazy evaluation*** et les **optimisations du plan d'exécution** effectuées par `Arrow` pour exploiter pleinement la puissance du format `Parquet`.
+
+## La _lazy evaluation_ en pratique
+
+::: {.exercise}
+## Exercice 2 : Exploiter la *lazy evaluation* et les optimisations d'`Arrow` {.unnumbered}
+
+* Utiliser la fonction [arrow::open_dataset](https://arrow.apache.org/docs/r/reference/open_dataset.html) pour ouvrir le fichier `data/RPindividus_24.parquet`. Regarder la classe de l'objet obtenu.
+* Afficher les 5 premières lignes de la table avec la fonction `head()`. Observer l'objet obtenu (sortie en console, classe).
+* Faire la même chose avec `duckdb` (par le biais de l'API _tidyverse_ et en SQL direct)
+
+* Prenez ce code:
+
+```{.r}
+arrow::open_dataset(path_parquet_subset) |>
+    filter(DEPT == "36") |>
+    group_by(AGED, DEPT) |>
+    summarise(n_indiv = sum(IPONDI))
+```
+
+et exécutez le. Que se passe-t-il à votre avis ?
+
+* Ajouter une étape `collect()` à la fin de cette chaîne. Comprenez-vous la différence ?
+
+* Construire une fonction `req_open_dataset` sur le modèle de celles de la partie précédente, qui importe cette fois les données avec la fonction [arrow::open_dataset](https://arrow.apache.org/docs/r/reference/open_dataset.html)
+* Comparer les performances (temps d'exécution et allocation mémoire) de la méthode `read_parquet` et de la méthode `open_dataset` grâce à la fonction [bench::mark](https://bench.r-lib.org/#benchmark)
+
+
+:::
+
+<iframe src="./bench/mark2.html" style="width: 100%; border-style: none; height: 0; overflow: hidden"
+        onload="resizeIframe(this)"></iframe>
+
+
+## Comprendre l'optimisation permise par `Parquet` et `DuckDB`
+
+Pour réduire la volumétrie des données importées, il est possible de mettre en oeuvre deux stratégies:
+
+- N'importer qu'un nombre limité de colonnes
+- N'importer qu'un nombre limité de lignes
+
+Comme cela a été évoqué dans les _slides_, le format `Parquet` est particulièrement optimisé pour le premier besoin. C'est donc généralement la première optimisation mise en oeuvre. Pour s'en convaincre on peut regarder la taille des données importées dans deux cas:
+
+- On utilise beaucoup de lignes mais peu de colonnes
+- On utilise beaucoup de colonnes mais peu de lignes
+
+Pour cela, nous utilisons la fonction SQL `EXPLAIN ANALYZE` disponible dans `duckdb`. Elle décompose le plan d'exécution de `duckdb`, ce qui nous permettra de comprendre la stratégie d'optimisation. Elle permet aussi de connaître le volume de données importées lorsqu'on récupère un fichier d'internet. En effet, `duckdb` est malin: plutôt que de télécharger un fichier entier pour n'en lire qu'une partie, la librairie est capable de n'importer que les blocs du fichier qui l'intéresse.
+
+Ceci nécessite l'utilisation de l'extension `httpfs` (un peu l'équivalent des `library` de `R` en `duckdb`). Elle s'installe et s'utilise de la manière suivante
+
+```{r}
+#| output: false
+library(duckdb)
+
+# url_bpe <- "https://www.insee.fr/fr/statistiques/fichier/8217525/BPE23.parquet"
+url_bpe <- "https://minio.lab.sspcloud.fr/lgaliana/diffusion/BPE23.parquet"
+con <- dbConnect(duckdb())
+
+dbExecute(
+  con,
+  glue(
+    "INSTALL httpfs;",
+    "LOAD httpfs;"
+  )
+)
+```
+
+Demandons à `DuckDB` d'exécuter la requête _"beaucoup de colonnes, pas beaucoup de lignes"_
+et regardons le plan d'exécution et les informations données par `DuckDB`:
+
+<details>
+
+<summary>
+Voir le plan : _"beaucoup de colonnes, pas beaucoup de lignes"_
+</summary>
+
+```{r}
+glue(
+    'EXPLAIN ANALYZE ',
+    'SELECT * FROM read_parquet("{url_bpe}") LIMIT 5'
+  )
+```
+
+
+```{r}
+plan <- dbGetQuery(
+  con,
+  glue(
+    'EXPLAIN ANALYZE ',
+    'SELECT * FROM read_parquet("{url_bpe}") LIMIT 5'
+  )
+)
+```
+
+```{r}
+print(plan)
+```
+
+</details>
+
+<details>
+
+
+
+<summary>
+Voir le plan : _"peu de colonnes, beaucoup de lignes"_
+</summary>
+
+```{r}
+plan <- dbGetQuery(
+  con,
+  glue(
+    'EXPLAIN ANALYZE ',
+    'SELECT TYPEQU, LONGITUDE, LATITUDE FROM read_parquet("{url_bpe}") LIMIT 10000'
+  )
+)
+```
+
+```{r}
+print(plan)
+```
+
+</details>
+
+La comparaison de ces plans d'exécution montre l'intérêt de faire un filtre sur les colonnes : les besoins computationnels sont drastiquement diminués. Le filtre sur les lignes n'arrive que dans un second temps, une fois les colonnes sélectionnées.
+
+Pourquoi seulement un rapport de 1 à 4 entre le poids des deux fichiers ? C'est parce que nos requêtes comportent toute deux la variable `IPONDI` (les poids à utiliser pour extrapoler l'échantillon à la population) qui est à haute précision là où beaucoup d'autres colonnes comportent un nombre réduit de modalités et sont donc peu volumineuses.
+
+
+
+# Le partitionnement
+
+La *lazy evaluation* et les optimisations d'`Arrow` apportent des gain de performance considérables. Mais on peut encore faire mieux ! Lorsqu'on sait qu'on va être amené à **filter régulièrement les données selon une variable d'intérêt**, on a tout intérêt à **partitionner** le fichier `Parquet` selon cette variable.
+
+
+::: {.exercise}
+## Partie 3 : Le `Parquet` partitionné {.unnumbered}
+
+* Parcourir la documentation de la fonction [arrow::write_dataset](https://arrow.apache.org/docs/r/reference/write_dataset.html) pour comprendre comment spécifier la clé de partitionnement d'un fichier `Parquet`. Plusieurs méthodes sont possibles !
+* Importer la table individus complète du recensement `data/RPindividus.parquet` avec la fonction [arrow::open_dataset](https://arrow.apache.org/docs/r/reference/open_dataset.html) et l'exporter en une table `data/RPindividus_partitionne.parquet` partitionnée par la région (`REGION`) et le département (`DEPT`)
+* Observer l'arborescence de fichiers de la table exportée
+* Modifier la fonction `req_open_dataset` de la partie précédente pour partir de la table complète (non-partitionnée) `data/RPindividus.parquet` au lieu de l'échantillon
+* Construire une fonction `req_open_dataset_partitionne` sur le modèle de `req_open_dataset`, qui importe cette fois les données partitionnées `data/RPindividus_partitionne.parquet`. Ne pas oublier de spécifier le paramètre `hive_style = TRUE`.
+* Comparer les performances (temps d'exécution et allocation mémoire) des deux méthodes grâce à la fonction [bench::mark](https://bench.r-lib.org/#benchmark)
+
+:::
+
+<iframe src="./bench/mark3.html" style="width: 100%; border-style: none; height: 0; overflow: hidden"
+        onload="resizeIframe(this)"></iframe>
+
+
+# `DuckDB` ou `Arrow` ? 
+
+La réponse dépend des préférences de chacun. Les deux écosystèmes sont très bien. `DuckDB` est pensé pour sa simplicité d'usage et son universalité: en principe, qu'on fasse du {{< fa brands python >}}, {{< fa brands r-project >}}, {{< fa brands js-square >}} ou de la ligne de commande, on pourra utiliser le même code SQL, seule la définition de la connection changera. `Arrow` propose une syntaxe un peu moins familière mais l'intégration au `tidyverse` rend ce _framework_ beaucoup plus facile d'usage que si on devait directement utiliser `Arrow`.
+
+Il existe aussi des clients plus hauts niveau pour `duckdb`: c'est notamment le cas de la connection entre `duckdb` et `tidyverse` permise en {{< fa brands r-project >}}. Ceux-ci permettent des opérations de manipulation de données plus complexes: si le SQL de `DuckDB` est déjà plus simple d'usage que celui de `PostGre`, on reste limité pour des opérations complexes de (dé)structuration de données: le client `tidyverse` apporte les avantages de cet écosystème en plus de ceux de `DuckDB`. 
+
+
+# `(Geo)Parquet` et `DuckDB` pour les données spatiales
+
+
+Nous proposons, pour illustrer l'un des atouts de `DuckDB`, à savoir sa simplicité d'usage sur des problèmes complexes, de faire du traitement de données spatiales. Pour cela, nous allons faire une tâche lourde: restreindre des données spatiales à partir de leur appartenance à une zone géographique donnée. Cette dernière sera définie géométriquement comme un triangle dont deux des coins correspondent aux anciens bâtiments de l'Insee à Malakoff. 
+
+L'import des contours dont nous aurons besoin en {{< fa brands r-project >}} se fait assez naturellement grâce à [`sf`](https://r-spatial.github.io/sf/).
+
+## Récupération des données
+
+```{r}
+#| output: false
+dir.create("data")
+
+download.file("https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/triangle.geojson", "data/triangle.geojson")
+download.file("https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/malakoff.geojson", "data/malakoff.geojson")
+download.file("https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/montrouge.geojson", "data/montrouge.geojson")
+download.file("https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/geoparquet/dvf.parquet", "data/dvf.parquet")
+download.file("https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/geoparquet/carreaux.parquet", "data/carreaux.parquet")
+
+
+triangle <- sf::st_read("data/triangle.geojson", quiet=TRUE)
+malakoff <- sf::st_read("data/malakoff.geojson", quiet=TRUE)
+montrouge <- sf::st_read("data/montrouge.geojson", quiet=TRUE)
+```
+
+On peut visualiser la ville de `Malakoff` et notre zone d'intérêt (qu'on nommera, par abus de langage, le triangle d'or de Malakoff):
+
+```{r}
+mapview(malakoff) + mapview(triangle, col.regions = "#ffff00")
+```
+
+Nous utiliserons aussi les contours de Montrouge pour cette partie:
+
+```{r}
+mapview(montrouge)
+```
+
+
+En principe, `duckdb` fonctionne à la manière d'une base de données. Autrement dit, on définit une base de données et effectue des requêtes (SQL ou verbes `tidyverse`) dessus. Pour créer une base de données, il suffit de faire un `read_parquet` avec le chemin du fichier.
+
+Comme il n'est pas possible de distinguer cette zone par requêtes attributaires, nous proposons de :
+
+1. Via `DuckDB`, extraire les transactions de l'ensemble de la commune de Malakoff tout en conservant leur caractère spatial (chaque transaction correspond à un point géographique, avec ses coordonnées xy).
+2. Utiliser localement le package `sf` pour distinguer spatialement les transactions effectuées à l'intérieur ou à l'extérieur du Triangle d'Or (dont nous fournissons les contours).
+3. Calculer la médiane des prix dans les deux sous-zones.
+
+::: {.callout-tip collapse="true"}
+## Format des géométries
+On extrait les transactions de Malakoff. Pour information, dans le fichier `dvf.parquet`, les coordonnées spatiales sont stockées dans un format binaire spécifique (Well-Known Binary - WKB). Ce format est efficace pour le stockage et les calculs, mais n'est pas directement lisible ou interprétable par les humains.
+
+
+En transformant ces géométries en une représentation texte lisible (Well-Known Text - WKT) avec `ST_AsText`, on rend les données spatiales faciles à afficher, interpréter ou manipuler dans des contextes qui ne supportent pas directement les formats binaires géospatiaux.
+:::
+
+
+
+
+## _Spatial join_ avec `DuckDB`
+
+Pour cet exercice, nous allons utiliser les variables suivantes:
+
+```{r}
+cog_malakoff <- "92046"
+cog_montrouge <- "92049"
+```
+
+et le geoparquet pourra être interprété par `duckdb` selon ce modèle:
+
+```{.r}
+FROM read_parquet('data/dvf.parquet')
+SELECT
+  XXXX,
+  ST_AsText(geometry) AS geom_text
+WHERE XXXX
+```
+
+La base de données se crée tout simplement de la manière suivante :
+
+```{r}
+#| output: false
+#| echo: true
+
+con <- dbConnect(duckdb::duckdb())
+dbExecute(con, "INSTALL spatial;")
+dbExecute(con, "LOAD spatial;")
+```
+
+
+::: {.exercise}
+## Exercice 3 {.unnumbered}
+
+1. En vous inspirant du _template_ ci-dessus, créer un _dataframe_ `transactions_malakoff` qui recense les transactions dans cette charmante bourgade.
+
+2. A ce niveau, les transactions extraites sont maintenant chargées en mémoire et on les transforme dans un format qui facilite leur manipulation en R via le package `sf`.
+
+```{.r}
+transactions_malakoff <-
+  sf::st_as_sf(transactions_malakoff, wkt = "geom_text", crs = 2154) |>
+  rename(geometry=geom_text)
+```
+
+3. Nous allons créer un masque pour reconnaître les transactions qui sont situées ou non dans le triangle d'or. Utiliser la structure suivante pour créer ce masque :
+
+```{.r}
+bool_mask <- transactions_malakoff |>
+  # ... |>
+  sf::st_intersects(triangle, sparse = FALSE)
+```
+
+⚠️ il faut tenir compte des projections géographiques avant de faire l'opération d'intersection. Ce code est donc à amender à la marge pour pouvoir faire l'intersection.
+
+Cela donne un vecteur de booléen, on peut donc identifier les transactions dans le triangle d'or ou en dehors à partir de celui-ci.
+
+:::
+
+Ci-dessous le dataframe brut extrait via Duckdb (réponse 1).
+
+```{r}
+#| echo: true
+query2 <- glue("
+    FROM read_parquet('data/dvf.parquet')
+    SELECT
+        code_commune,
+        valeur_fonciere,
+        ST_AsText(geometry) AS geom_text
+    WHERE code_commune = '{cog_malakoff}'
+")
+
+transactions_malakoff <- dbGetQuery(con, query2)
+
+head(transactions_malakoff, 3)
+```
+
+Ci-dessous, le dataframe transformé en objet `sf` et prêt pour les opérations spatiales (réponse 2) :
+
+```{r}
+#| echo: true
+transactions_malakoff <-
+  sf::st_as_sf(transactions_malakoff, wkt = "geom_text", crs = 2154) |>
+  rename(geometry=geom_text)
+
+head(transactions_malakoff, 3)
+```
+
+Une fois les données prêtes, on intersecte les points avec le triangle représentant le centre-ville de Malakoff (question 3)
+
+
+```{r}
+#| echo: true
+bool_mask <- transactions_malakoff |>
+  sf::st_transform(4326) |>
+  sf::st_intersects(triangle, sparse = FALSE)
+
+head(bool_mask)
+```
+
+On peut ensuite facilement créer nos deux espaces de Malakoff :
+
+```{r}
+#| echo: true
+in_triangle <- transactions_malakoff[bool_mask,]
+out_triangle <- transactions_malakoff[!bool_mask,]
+```
+
+Une fois que chaque transaction est identifiée comme étant à l'intérieur ou à l'extérieur du Triangle, le calcul de la médiane des prix est immédiat.
+
+```{r}
+median_in <- median(in_triangle$valeur_fonciere)
+median_out <- median(out_triangle$valeur_fonciere)
+
+print(glue("Médiane des prix dans le Triangle d'Or de Malakoff : ", median_in))
+print(glue("Médiane des prix dans le reste de Malakoff : ", median_out))
+```
+
+La médiane des prix est un peu plus élevée dans le Triangle qu'en dehors. On peut aller au-delà et étudier la distribution des transactions. Bien que la taille d'échantillon soit réduite, on a ainsi une idée de la diversité des prix dans cette bucolique commune de Malakoff.
+
+
+```{r}
+#| code-fold: true
+#| code-summary: "Produire la figure sur la distribution du prix des biens"
+library(ggplot2)
+library(scales)
+
+malakoff_identified <- transactions_malakoff %>%
+  mutate(
+    region = if_else(as.logical(bool_mask), "Triangle d'or", "Hors triangle d'or")
+  )
+
+ggplot(
+  malakoff_identified,
+  aes(y = valeur_fonciere, x = region, fill = region)
+) +
+  geom_violin() +
+  scale_y_continuous(
+    trans = "log10",
+    labels = comma_format(),
+    breaks = scales::trans_breaks("log10", function(x) 10^x)
+  ) +
+  geom_jitter(height = 0, width = 0.1) +
+  labs(y = "Valeur de vente (€)") +
+  theme_minimal()
+```
+
+Tout ceci ne nous dit rien de la différence entre les biens dans le triangle et en dehors de celui-ci. Nous n'avons fait aucun contrôle sur les caractéristiques des biens. Nous laissons les curieux explorer la mine d'or qu'est cette base.
+
+
+# Accéder directement à des données sur `S3`
+
+{{< include "./python/_s3.qmd" >}}
+
