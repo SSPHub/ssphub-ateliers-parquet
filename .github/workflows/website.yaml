@@ -23,14 +23,10 @@ jobs:
             libproj-dev \
             libfontconfig1-dev \
             libharfbuzz-dev libfribidi-dev
-      - uses: r-lib/actions/setup-r@v2
-      - name: Install dependencies
-        run: |
-          Rscript './R/install.R'
       - name: Set up quarto
         uses: quarto-dev/quarto-actions/setup@v2
         with:
-          version: 1.6.42
+          version: 1.6.43
       - name: Render website
         run: |
           quarto render --to html

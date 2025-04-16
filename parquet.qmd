@@ -20,7 +20,7 @@ Afin de comparer les différents formats et méthodes d'utilisation, nous allons
 
 Au cours de cet atelier, nous aurons besoin des _packages_ suivants:
 
-```{r}
+```{.r}
 #| output: false
 library(duckdb)
 library(glue)
@@ -150,7 +150,7 @@ Pour cela, nous utilisons la fonction SQL `EXPLAIN ANALYZE` disponible dans `duc
 
 Ceci nécessite l'utilisation de l'extension `httpfs` (un peu l'équivalent des `library` de `R` en `duckdb`). Elle s'installe et s'utilise de la manière suivante
 
-```{r}
+```{.r}
 #| output: false
 library(duckdb)
 
@@ -176,7 +176,7 @@ et regardons le plan d'exécution et les informations données par `DuckDB`:
 Voir le plan : _"beaucoup de colonnes, pas beaucoup de lignes"_
 </summary>
 
-```{r}
+```{.r}
 glue(
     'EXPLAIN ANALYZE ',
     'SELECT * FROM read_parquet("{url_bpe}") LIMIT 5'
@@ -184,7 +184,7 @@ glue(
 ```
 
 
-```{r}
+```{.r}
 plan <- dbGetQuery(
   con,
   glue(
@@ -194,7 +194,7 @@ plan <- dbGetQuery(
 )
 ```
 
-```{r}
+```{.r}
 print(plan)
 ```
 
@@ -208,7 +208,7 @@ print(plan)
 Voir le plan : _"peu de colonnes, beaucoup de lignes"_
 </summary>
 
-```{r}
+```{.r}
 plan <- dbGetQuery(
   con,
   glue(
@@ -218,7 +218,7 @@ plan <- dbGetQuery(
 )
 ```
 
-```{r}
+```{.r}
 print(plan)
 ```
 
@@ -267,7 +267,7 @@ L'import des contours dont nous aurons besoin en {{< fa brands r-project >}} se 
 
 ## Récupération des données
 
-```{r}
+```{.r}
 #| output: false
 dir.create("data")
 
@@ -285,13 +285,13 @@ montrouge <- sf::st_read("data/montrouge.geojson", quiet=TRUE)
 
 On peut visualiser la ville de `Malakoff` et notre zone d'intérêt (qu'on nommera, par abus de langage, le triangle d'or de Malakoff):
 
-```{r}
+```{.r}
 mapview(malakoff) + mapview(triangle, col.regions = "#ffff00")
 ```
 
 Nous utiliserons aussi les contours de Montrouge pour cette partie:
 
-```{r}
+```{.r}
 mapview(montrouge)
 ```
 
@@ -319,7 +319,7 @@ En transformant ces géométries en une représentation texte lisible (Well-Know
 
 Pour cet exercice, nous allons utiliser les variables suivantes:
 
-```{r}
+```{.r}
 cog_malakoff <- "92046"
 cog_montrouge <- "92049"
 ```
@@ -336,7 +336,7 @@ WHERE XXXX
 
 La base de données se crée tout simplement de la manière suivante :
 
-```{r}
+```{.r}
 #| output: false
 #| echo: true
 
@@ -375,7 +375,7 @@ Cela donne un vecteur de booléen, on peut donc identifier les transactions dans
 
 Ci-dessous le dataframe brut extrait via Duckdb (réponse 1).
 
-```{r}
+```{.r}
 #| echo: true
 query2 <- glue("
     FROM read_parquet('data/dvf.parquet')
@@ -393,7 +393,7 @@ head(transactions_malakoff, 3)
 
 Ci-dessous, le dataframe transformé en objet `sf` et prêt pour les opérations spatiales (réponse 2) :
 
-```{r}
+```{.r}
 #| echo: true
 transactions_malakoff <-
   sf::st_as_sf(transactions_malakoff, wkt = "geom_text", crs = 2154) |>
@@ -405,7 +405,7 @@ head(transactions_malakoff, 3)
 Une fois les données prêtes, on intersecte les points avec le triangle représentant le centre-ville de Malakoff (question 3)
 
 
-```{r}
+```{.r}
 #| echo: true
 bool_mask <- transactions_malakoff |>
   sf::st_transform(4326) |>
@@ -416,7 +416,7 @@ head(bool_mask)
 
 On peut ensuite facilement créer nos deux espaces de Malakoff :
 
-```{r}
+```{.r}
 #| echo: true
 in_triangle <- transactions_malakoff[bool_mask,]
 out_triangle <- transactions_malakoff[!bool_mask,]
@@ -424,7 +424,7 @@ out_triangle <- transactions_malakoff[!bool_mask,]
 
 Une fois que chaque transaction est identifiée comme étant à l'intérieur ou à l'extérieur du Triangle, le calcul de la médiane des prix est immédiat.
 
-```{r}
+```{.r}
 median_in <- median(in_triangle$valeur_fonciere)
 median_out <- median(out_triangle$valeur_fonciere)
 
@@ -435,7 +435,7 @@ print(glue("Médiane des prix dans le reste de Malakoff : ", median_out))
 La médiane des prix est un peu plus élevée dans le Triangle qu'en dehors. On peut aller au-delà et étudier la distribution des transactions. Bien que la taille d'échantillon soit réduite, on a ainsi une idée de la diversité des prix dans cette bucolique commune de Malakoff.
 
 
-```{r}
+```{.r}
 #| code-fold: true
 #| code-summary: "Produire la figure sur la distribution du prix des biens"
 library(ggplot2)
