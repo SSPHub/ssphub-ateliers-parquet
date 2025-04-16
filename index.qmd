@@ -3,7 +3,7 @@ title: "Atelier pour découvrir la récupération de données via avec le format
 author: Lino Galiana
 date: 2025-04-09
 description: |
-  XXXXX
+  Le format `Parquet` est un format de données connaissant une popularité importante du fait de ses caractéristiques techniques (orientation colonne, compression, interopérabilité...), de sa nature _open source_ et du riche écosystème associé dont les frameworks les plus proéminents sont `Arrow` et `DuckDB`. A ces nombreux avantages s'ajoutent une intégration native aux infrastructures _cloud_ basées sur `S3`, des extensions nombreuses pour traiter des données complexes comme les données géographiques ou, plus récemment, le portage en WASM de `DuckDB` permettant de construire des applications réactives impliquant des transformations de données directement depuis le navigateur. 
 number-sections: true
 image: https://minio.lab.sspcloud.fr/lgaliana/generative-art/pythonds/serveurpython.jpg
 ---
