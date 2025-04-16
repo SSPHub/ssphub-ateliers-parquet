@@ -30,7 +30,7 @@ jobs:
       - name: Render website
         run: |
           pip install uv
-          uv pip install -r requirements.txt
+          uv pip install -r pyproject.toml
           quarto render --to html
         env:
             TOKEN_API_INSEE:  ${{ secrets.TOKEN_API_INSEE }}
