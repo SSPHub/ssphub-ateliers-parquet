@@ -1,0 +1,120 @@
+
+En premier lieu, la bonne pratique est de définir la connexion à `S3` par le biais de secrets `DuckDB`:
+
+```{python}
+#| eval: false
+import os
+import duckdb 
+
+con = duckdb.connect(database=":memory:")
+
+con.execute(
+    f"""
+CREATE SECRET secret_ls3 (
+    TYPE S3,
+    KEY_ID '{os.environ["AWS_ACCESS_KEY_ID"]}',
+    SECRET '{os.environ["AWS_SECRET_ACCESS_KEY"]}',
+    ENDPOINT '{os.environ["AWS_S3_ENDPOINT"]}',
+    SESSION_TOKEN '{os.environ["AWS_SESSION_TOKEN"]}',
+    REGION 'us-east-1',
+    URL_STYLE 'path'
+);
+"""
+)
+```
+
+Il suffit ensuite de faire un `read_parquet` en préfixant par `s3://`. La lecture se passera comme si on était en local:
+
+```{python}
+#| eval: false
+query = (
+    "FROM read_parquet('s3://projet-formation/bonnes-pratiques/data/RPindividus.parquet') "
+    "SELECT IPONDI AS poids, COLUMNS('.*AGE.*')"
+)
+con.sql(query)
+```
+
+On peut bien sûr faire des opérations plus complexes, par exemple calculer une pyramide des âges par département par le biais d'une requête SQL:
+
+```{python}
+#| eval: false
+pyramide = con.sql("""
+    FROM read_parquet('s3://projet-formation/bonnes-pratiques/data/RPindividus.parquet')
+    SELECT 
+        CAST(FLOOR(AGED / 10) * 10 AS INT) AS tranche_age,
+        CAST(SUM(IPONDI) AS INT) AS poids,
+        DEPT
+    GROUP BY tranche_age, DEPT
+    ORDER BY tranche_age, DEPT
+""").to_df()
+
+pyramide
+```
+
+Représentons celle-ci sur une carte. Récupérons le fond de carte des départements avec `cartiflette`:
+
+```{python}
+#| eval: false
+from cartiflette import carti_download
+
+shp_communes = carti_download(
+    values = ["France"],
+    crs = 4326,
+    borders = "DEPARTEMENT",
+    vectorfile_format="topojson",
+    simplification=50,
+    filter_by="FRANCE_ENTIERE_DROM_RAPPROCHES",
+    source="EXPRESS-COG-CARTO-TERRITOIRE",
+    year=2022
+)
+
+shp_communes.head(2)
+```
+
+Calculons la part de chaque classe d'âge pour neutraliser l'effet taille:
+
+```{python}
+#| eval: false
+donnees_carte = (
+    shp_communes
+    .merge(pyramide, left_on="INSEE_DEP", right_on="DEPT")
+)
+donnees_carte["proportion"] = donnees_carte["poids"] / donnees_carte["POPULATION"]
+```
+
+Et voici les cartes, obtenues simplement:
+
+```{python}
+#| eval: false
+from plotnine import *
+map = (
+    ggplot(donnees_carte.loc[donnees_carte["tranche_age"] == 30]) +
+    geom_map(aes(fill = "proportion")) +
+    theme_light() +
+    labs(title = "Part des trentenaires dans la population")
+)
+map
+```
+
+
+
+```{python}
+#| eval: false
+from plotnine import *
+map = (
+    ggplot(donnees_carte.loc[donnees_carte["tranche_age"] == 60]) +
+    geom_map(aes(fill = "proportion")) +
+    theme_light() +
+    labs(title = "Part des soixantenaires dans la population")
+)
+map
+```
+
+## Données partitionnées
+
+On peut faire la même chose avec des données partitionnées:
+
+```{python}
+#| eval: false
+con.sql("SELECT * FROM read_parquet('s3://projet-formation/bonnes-pratiques/data/RPindividus/**/*.parquet', hive_partitioning = true) WHERE DEPT IN (11, 31, 34)")
+```
