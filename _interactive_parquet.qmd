@@ -1,0 +1,19 @@
+```{ojs}
+//| echo: false
+viewof search = Inputs.select(cog, {format: x => x.LIBELLE, value: cog.find(t => t.LIBELLE == "Grasse")})
+
+cog = db.query(`SELECT * FROM read_csv_auto("https://minio.lab.sspcloud.fr/lgaliana/data/python-ENSAE/cog_2023.csv") WHERE DEP == '06'`)
+dvf = db.query(query)
+
+db = DuckDBClient.of({})
+
+query = `
+  FROM read_parquet('https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/geoparquet/dvf.parquet')
+  SELECT
+    CAST(date_mutation AS date) AS date,
+    valeur_fonciere, code_commune,
+    longitude, latitude, valeur_fonciere AS valeur_fonciere_bar
+  WHERE code_commune = '${search.COM}'
+`
+
+```
