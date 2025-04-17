@@ -106,6 +106,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Recherche"
   }
 }</script>
+<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
 <style>
 div.callout-exercise.callout {
   border-left-color: pink;
@@ -191,6 +193,8 @@ div.callout-exercise.callout-style-default .callout-icon::before, div.callout-ex
   <ul class="collapse">
   <li><a href="#données-partitionnées" id="toc-données-partitionnées" class="nav-link" data-scroll-target="#données-partitionnées">Données partitionnées</a></li>
   </ul></li>
+  <li><a href="#duckdb-wasm" id="toc-duckdb-wasm" class="nav-link" data-scroll-target="#duckdb-wasm"><span class="header-section-number">8</span> DuckDB WASM</a></li>
+  <li><a href="#références-supplémentaires" id="toc-références-supplémentaires" class="nav-link" data-scroll-target="#références-supplémentaires">Références supplémentaires</a></li>
   </ul>
 </nav>
     </div>
@@ -792,7 +796,7 @@ Exercice 3
 <section id="accéder-directement-à-des-données-sur-s3" class="level1" data-number="7">
 <h1 data-number="7"><span class="header-section-number">7</span> Accéder directement à des données sur <code>S3</code></h1>
 <p>En premier lieu, la bonne pratique est de définir la connexion à <code>S3</code> par le biais de secrets <code>DuckDB</code>:</p>
-<div id="661e802d" class="cell" data-execution_count="1">
+<div id="e9487a14" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckdb </span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -813,7 +817,7 @@ Exercice 3
 <span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Il suffit ensuite de faire un <code>read_parquet</code> en préfixant par <code>s3://</code>. La lecture se passera comme si on était en local:</p>
-<div id="88ffd6bc" class="cell" data-execution_count="2">
+<div id="95d3eb94" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> (</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"FROM read_parquet('s3://projet-formation/bonnes-pratiques/data/RPindividus.parquet') "</span></span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SELECT IPONDI AS poids, COLUMNS('.*AGE.*')"</span></span>
@@ -821,7 +825,7 @@ Exercice 3
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>con.sql(query)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On peut bien sûr faire des opérations plus complexes, par exemple calculer une pyramide des âges par département par le biais d’une requête SQL:</p>
-<div id="b3225276" class="cell" data-execution_count="3">
+<div id="1b14650b" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>pyramide <span class="op">=</span> con.sql(<span class="st">"""</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM read_parquet('s3://projet-formation/bonnes-pratiques/data/RPindividus.parquet')</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT </span></span>
@@ -835,7 +839,7 @@ Exercice 3
 <span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>pyramide</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Représentons celle-ci sur une carte. Récupérons le fond de carte des départements avec <code>cartiflette</code>:</p>
-<div id="448352b9" class="cell" data-execution_count="4">
+<div id="0eff6e43" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cartiflette <span class="im">import</span> carti_download</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>shp_communes <span class="op">=</span> carti_download(</span>
@@ -852,7 +856,7 @@ Exercice 3
 <span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>shp_communes.head(<span class="dv">2</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Calculons la part de chaque classe d’âge pour neutraliser l’effet taille:</p>
-<div id="b31de48e" class="cell" data-execution_count="5">
+<div id="23c1d876" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>donnees_carte <span class="op">=</span> (</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    shp_communes</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    .merge(pyramide, left_on<span class="op">=</span><span class="st">"INSEE_DEP"</span>, right_on<span class="op">=</span><span class="st">"DEPT"</span>)</span>
@@ -860,7 +864,7 @@ Exercice 3
 <span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>donnees_carte[<span class="st">"proportion"</span>] <span class="op">=</span> donnees_carte[<span class="st">"poids"</span>] <span class="op">/</span> donnees_carte[<span class="st">"POPULATION"</span>]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Et voici les cartes, obtenues simplement:</p>
-<div id="2013b63b" class="cell" data-execution_count="6">
+<div id="f7facd60" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> (</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    ggplot(donnees_carte.loc[donnees_carte[<span class="st">"tranche_age"</span>] <span class="op">==</span> <span class="dv">30</span>]) <span class="op">+</span></span>
@@ -870,7 +874,7 @@ Exercice 3
 <span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="187e9b98" class="cell" data-execution_count="7">
+<div id="b009ee73" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="bu">map</span> <span class="op">=</span> (</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    ggplot(donnees_carte.loc[donnees_carte[<span class="st">"tranche_age"</span>] <span class="op">==</span> <span class="dv">60</span>]) <span class="op">+</span></span>
@@ -883,15 +887,215 @@ Exercice 3
 <section id="données-partitionnées" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="données-partitionnées">Données partitionnées</h2>
 <p>On peut faire la même chose avec des données partitionnées:</p>
-<div id="26a9779c" class="cell" data-execution_count="8">
+<div id="7e14e35f" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>con.sql(<span class="st">"SELECT * FROM read_parquet('s3://projet-formation/bonnes-pratiques/data/RPindividus/**/*.parquet', hive_partitioning = true) WHERE DEPT IN (11, 31, 34)"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-
-
 </section>
+</section>
+<section id="duckdb-wasm" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> DuckDB WASM</h1>
+<p><code>DuckDB</code> permet aussi de faire des traitements analytiques directement dans le navigateur grâce à son implémentation WASM. C’est particulièrement pratique pour créer des applications réactives comme celle-ci :</p>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb35" data-startfrom="516" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 515;"><span id="cb35-516"><a href="#cb35-516" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`</span></span>
+<span id="cb35-517"><a href="#cb35-517" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;div style="display: flex; flex-direction: column; gap: 1rem;"&gt;</span></span>
+<span id="cb35-518"><a href="#cb35-518" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-519"><a href="#cb35-519" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;!-- Search bar at the top --&gt;</span></span>
+<span id="cb35-520"><a href="#cb35-520" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div&gt;</span><span class="sc">${</span>viewof search<span class="sc">}</span><span class="vs">&lt;/div&gt;</span></span>
+<span id="cb35-521"><a href="#cb35-521" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-522"><a href="#cb35-522" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;!-- Two-column block --&gt;</span></span>
+<span id="cb35-523"><a href="#cb35-523" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; backgroundColor: '#293845';"&gt;</span></span>
+<span id="cb35-524"><a href="#cb35-524" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;div&gt;</span><span class="sc">${</span><span class="fu">produce_histo</span>(dvf)<span class="sc">}</span><span class="vs">&lt;/div&gt;</span></span>
+<span id="cb35-525"><a href="#cb35-525" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;div&gt;</span><span class="sc">${</span>viewof table_dvf<span class="sc">}</span><span class="vs">&lt;/div&gt;</span></span>
+<span id="cb35-526"><a href="#cb35-526" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/div&gt;</span></span>
+<span id="cb35-527"><a href="#cb35-527" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-528"><a href="#cb35-528" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-529"><a href="#cb35-529" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/div&gt;</span></span>
+<span id="cb35-530"><a href="#cb35-530" aria-hidden="true" tabindex="-1"></a><span class="vs">`</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-1" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb36" data-startfrom="535" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 534;"><span id="cb36-535"><a href="#cb36-535" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb36-536"><a href="#cb36-536" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> container <span class="op">=</span> <span class="fu">html</span><span class="vs">`&lt;link</span></span>
+<span id="cb36-537"><a href="#cb36-537" aria-hidden="true" tabindex="-1"></a><span class="vs">    rel="stylesheet"</span></span>
+<span id="cb36-538"><a href="#cb36-538" aria-hidden="true" tabindex="-1"></a><span class="vs">    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"</span></span>
+<span id="cb36-539"><a href="#cb36-539" aria-hidden="true" tabindex="-1"></a><span class="vs">  /&gt;</span></span>
+<span id="cb36-540"><a href="#cb36-540" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"&gt;&lt;/script&gt;</span></span>
+<span id="cb36-541"><a href="#cb36-541" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;div id="map" style="height: 500px;"&gt;&lt;/div&gt;`</span></span>
+<span id="cb36-542"><a href="#cb36-542" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-543"><a href="#cb36-543" aria-hidden="true" tabindex="-1"></a>  <span class="kw">yield</span> container</span>
+<span id="cb36-544"><a href="#cb36-544" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-545"><a href="#cb36-545" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> map <span class="op">=</span> L<span class="op">.</span><span class="fu">map</span>(<span class="st">'map'</span>)<span class="op">;</span></span>
+<span id="cb36-546"><a href="#cb36-546" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-547"><a href="#cb36-547" aria-hidden="true" tabindex="-1"></a>  L<span class="op">.</span><span class="fu">tileLayer</span>(<span class="st">'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'</span><span class="op">,</span> {</span>
+<span id="cb36-548"><a href="#cb36-548" aria-hidden="true" tabindex="-1"></a>    <span class="dt">attribution</span><span class="op">:</span> <span class="st">'© OpenStreetMap contributors'</span></span>
+<span id="cb36-549"><a href="#cb36-549" aria-hidden="true" tabindex="-1"></a>  })<span class="op">.</span><span class="fu">addTo</span>(map)<span class="op">;</span></span>
+<span id="cb36-550"><a href="#cb36-550" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-551"><a href="#cb36-551" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> geoLayer <span class="op">=</span> L<span class="op">.</span><span class="fu">geoJSON</span>(dvf_geojson<span class="op">,</span> {</span>
+<span id="cb36-552"><a href="#cb36-552" aria-hidden="true" tabindex="-1"></a>    <span class="dt">onEachFeature</span><span class="op">:</span> (feature<span class="op">,</span> layer) <span class="kw">=&gt;</span> {</span>
+<span id="cb36-553"><a href="#cb36-553" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> props <span class="op">=</span> feature<span class="op">.</span><span class="at">properties</span><span class="op">;</span></span>
+<span id="cb36-554"><a href="#cb36-554" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> popupContent <span class="op">=</span> <span class="vs">`</span></span>
+<span id="cb36-555"><a href="#cb36-555" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;strong&gt;Date:&lt;/strong&gt; </span><span class="sc">${</span>props<span class="op">.</span><span class="at">date</span><span class="sc">}</span><span class="vs">&lt;br&gt;</span></span>
+<span id="cb36-556"><a href="#cb36-556" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;strong&gt;Valeur foncière:&lt;/strong&gt; </span><span class="sc">${</span>props<span class="op">.</span><span class="at">valeur_fonciere</span><span class="sc">}</span><span class="vs"> €&lt;br&gt;</span></span>
+<span id="cb36-557"><a href="#cb36-557" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;strong&gt;Commune:&lt;/strong&gt; </span><span class="sc">${</span>props<span class="op">.</span><span class="at">code_commune</span><span class="sc">}</span></span>
+<span id="cb36-558"><a href="#cb36-558" aria-hidden="true" tabindex="-1"></a><span class="vs">      `</span><span class="op">;</span></span>
+<span id="cb36-559"><a href="#cb36-559" aria-hidden="true" tabindex="-1"></a>      layer<span class="op">.</span><span class="fu">bindPopup</span>(popupContent)<span class="op">;</span></span>
+<span id="cb36-560"><a href="#cb36-560" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb36-561"><a href="#cb36-561" aria-hidden="true" tabindex="-1"></a>  })<span class="op">.</span><span class="fu">addTo</span>(map)<span class="op">;</span></span>
+<span id="cb36-562"><a href="#cb36-562" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-563"><a href="#cb36-563" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 👇 Automatically fit view to all points</span></span>
+<span id="cb36-564"><a href="#cb36-564" aria-hidden="true" tabindex="-1"></a>  map<span class="op">.</span><span class="fu">fitBounds</span>(geoLayer<span class="op">.</span><span class="fu">getBounds</span>())<span class="op">;</span></span>
+<span id="cb36-565"><a href="#cb36-565" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-2" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb37" data-startfrom="574" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 573;"><span id="cb37-574"><a href="#cb37-574" aria-hidden="true" tabindex="-1"></a>viewof search <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(cog<span class="op">,</span> {<span class="dt">format</span><span class="op">:</span> x <span class="kw">=&gt;</span> x<span class="op">.</span><span class="at">LIBELLE</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> cog<span class="op">.</span><span class="fu">find</span>(t <span class="kw">=&gt;</span> t<span class="op">.</span><span class="at">LIBELLE</span> <span class="op">==</span> <span class="st">"Grasse"</span>)})</span>
+<span id="cb37-575"><a href="#cb37-575" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-576"><a href="#cb37-576" aria-hidden="true" tabindex="-1"></a>cog <span class="op">=</span> db<span class="op">.</span><span class="fu">query</span>(<span class="vs">`SELECT * FROM read_csv_auto("https://minio.lab.sspcloud.fr/lgaliana/data/python-ENSAE/cog_2023.csv") WHERE DEP == '06'`</span>)</span>
+<span id="cb37-577"><a href="#cb37-577" aria-hidden="true" tabindex="-1"></a>dvf <span class="op">=</span> db<span class="op">.</span><span class="fu">query</span>(query)</span>
+<span id="cb37-578"><a href="#cb37-578" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-579"><a href="#cb37-579" aria-hidden="true" tabindex="-1"></a>db <span class="op">=</span> DuckDBClient<span class="op">.</span><span class="fu">of</span>({})</span>
+<span id="cb37-580"><a href="#cb37-580" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-581"><a href="#cb37-581" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> <span class="vs">`</span></span>
+<span id="cb37-582"><a href="#cb37-582" aria-hidden="true" tabindex="-1"></a><span class="vs">  FROM read_parquet('https://minio.lab.sspcloud.fr/projet-formation/nouvelles-sources/data/geoparquet/dvf.parquet')</span></span>
+<span id="cb37-583"><a href="#cb37-583" aria-hidden="true" tabindex="-1"></a><span class="vs">  SELECT</span></span>
+<span id="cb37-584"><a href="#cb37-584" aria-hidden="true" tabindex="-1"></a><span class="vs">    CAST(date_mutation AS date) AS date,</span></span>
+<span id="cb37-585"><a href="#cb37-585" aria-hidden="true" tabindex="-1"></a><span class="vs">    valeur_fonciere, code_commune,</span></span>
+<span id="cb37-586"><a href="#cb37-586" aria-hidden="true" tabindex="-1"></a><span class="vs">    longitude, latitude, valeur_fonciere AS valeur_fonciere_bar</span></span>
+<span id="cb37-587"><a href="#cb37-587" aria-hidden="true" tabindex="-1"></a><span class="vs">  WHERE code_commune = '</span><span class="sc">${</span>search<span class="op">.</span><span class="at">COM</span><span class="sc">}</span><span class="vs">'</span></span>
+<span id="cb37-588"><a href="#cb37-588" aria-hidden="true" tabindex="-1"></a><span class="vs">`</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb38" data-startfrom="591" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 590;"><span id="cb38-591"><a href="#cb38-591" aria-hidden="true" tabindex="-1"></a>viewof table_dvf <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">table</span>(dvf<span class="op">,</span> {<span class="dt">columns</span><span class="op">:</span> [<span class="st">"date"</span><span class="op">,</span> <span class="st">"valeur_fonciere"</span>]<span class="op">,</span> <span class="dt">rows</span><span class="op">:</span> <span class="dv">15</span>})</span>
+<span id="cb38-592"><a href="#cb38-592" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-593"><a href="#cb38-593" aria-hidden="true" tabindex="-1"></a>produce_histo <span class="op">=</span> <span class="kw">function</span>(dvf){</span>
+<span id="cb38-594"><a href="#cb38-594" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> histo <span class="op">=</span> Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb38-595"><a href="#cb38-595" aria-hidden="true" tabindex="-1"></a>  <span class="dt">style</span><span class="op">:</span> {<span class="dt">backgroundColor</span><span class="op">:</span> <span class="st">"transparent"</span>}<span class="op">,</span></span>
+<span id="cb38-596"><a href="#cb38-596" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb38-597"><a href="#cb38-597" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">rectY</span>(dvf<span class="op">,</span> Plot<span class="op">.</span><span class="fu">binX</span>({<span class="dt">y</span><span class="op">:</span> <span class="st">"count"</span>}<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> <span class="st">"valeur_fonciere"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#ff562c"</span>}))<span class="op">,</span></span>
+<span id="cb38-598"><a href="#cb38-598" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">ruleY</span>([<span class="dv">0</span>])</span>
+<span id="cb38-599"><a href="#cb38-599" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb38-600"><a href="#cb38-600" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb38-601"><a href="#cb38-601" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> histo</span>
+<span id="cb38-602"><a href="#cb38-602" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-4-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-4-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb39" data-startfrom="0" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line -1;"><span id="cb39-0"><a href="#cb39-0" aria-hidden="true" tabindex="-1"></a>dvf_geojson <span class="op">=</span> {</span>
+<span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> geojson <span class="op">=</span> {</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">type</span><span class="op">:</span> <span class="st">"FeatureCollection"</span><span class="op">,</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">features</span><span class="op">:</span> dvf<span class="op">.</span><span class="fu">map</span>(row <span class="kw">=&gt;</span> ({</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">type</span><span class="op">:</span> <span class="st">"Feature"</span><span class="op">,</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">geometry</span><span class="op">:</span> {</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">type</span><span class="op">:</span> <span class="st">"Point"</span><span class="op">,</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">coordinates</span><span class="op">:</span> [row<span class="op">.</span><span class="at">longitude</span><span class="op">,</span> row<span class="op">.</span><span class="at">latitude</span>]<span class="op">,</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>      }<span class="op">,</span></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">properties</span><span class="op">:</span> {</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">date</span><span class="op">:</span> row<span class="op">.</span><span class="at">date</span><span class="op">,</span></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">valeur_fonciere</span><span class="op">:</span> row<span class="op">.</span><span class="at">valeur_fonciere</span><span class="op">,</span></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">code_commune</span><span class="op">:</span> row<span class="op">.</span><span class="at">code_commune</span><span class="op">,</span></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">valeur_fonciere_bar</span><span class="op">:</span> row<span class="op">.</span><span class="at">valeur_fonciere_bar</span><span class="op">,</span></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>      }<span class="op">,</span></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>    }))<span class="op">,</span></span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> geojson</span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>Que ce soit avec <code>Quarto</code> (comme ici) ou par le biais d’<code>Observable</code> (comme <a href="https://observablehq.com/@linogaliana/atelier-parquet-ssphub">là</a>), il est donc possible de construire des applications interactives reposant sur des sites statiques, sans avoir besoin d’un serveur <i class="fa-brands fa-r-project" aria-label="r-project"></i> ou <i class="fa-brands fa-python" aria-label="python"></i>.</p>
+</section>
+<section id="références-supplémentaires" class="level1 unnumbered">
+<h1 class="unnumbered">Références supplémentaires</h1>
+<p>Du contenu pédagogique supplémentaire sur le sujet, produit par l’Insee:</p>
+<ul>
+<li><a href="https://inseefrlab.github.io/formation-bonnes-pratiques-git-R/">La formation aux bonnes pratiques</a> de l’Insee</li>
+<li>Un atelier de l’EHESS sur <code>Parquet</code> avec de nombreux exemples <a href="https://linogaliana.github.io/parquet-recensement-tutomate/">ici</a></li>
+<li>Le <a href="https://ensae-reproductibilite.github.io/website/">cours de mise en production</a> de l’ENSAE</li>
+</ul>
+<p>D’autres références utiles, à consommer sans modération, sur le sujet:</p>
+<ul>
+<li>Les posts d’Eric Mauvière sur <a href="https://www.icem7.fr/">icem7.fr/</a></li>
+<li><a href="https://www.casd.eu/webinaire-casd-data-tech/">Webinaire du CASD</a> sur <code>Parquet</code> et <code>DuckDB</code></li>
+</ul>
+<p>Une vidéo sur la philosophie derrière la naissance de <code>DuckDB</code> et sa relation avec <code>MotherDuck</code>:</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/JH4Th2dFSUk" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+
+
 </section>
 
 </main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6Imh0bWxgXG4gIDxkaXYgc3R5bGU9XCJkaXNwbGF5OiBmbGV4OyBmbGV4LWRpcmVjdGlvbjogY29sdW1uOyBnYXA6IDFyZW07XCI+XG5cbiAgICA8IS0tIFNlYXJjaCBiYXIgYXQgdGhlIHRvcCAtLT5cbiAgICA8ZGl2PiR7dmlld29mIHNlYXJjaH08L2Rpdj5cblxuICAgIDwhLS0gVHdvLWNvbHVtbiBibG9jayAtLT5cbiAgICA8ZGl2IHN0eWxlPVwiZGlzcGxheTogZ3JpZDsgZ3JpZC10ZW1wbGF0ZS1jb2x1bW5zOiAxZnIgMWZyOyBnYXA6IDFyZW07IGJhY2tncm91bmRDb2xvcjogJyMyOTM4NDUnO1wiPlxuICAgICAgPGRpdj4ke3Byb2R1Y2VfaGlzdG8oZHZmKX08L2Rpdj5cbiAgICAgIDxkaXY+JHt2aWV3b2YgdGFibGVfZHZmfTwvZGl2PlxuICAgIDwvZGl2PlxuXG5cbiAgPC9kaXY+XG5gXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IGNvbnRhaW5lciA9IGh0bWxgPGxpbmtcbiAgICByZWw9XCJzdHlsZXNoZWV0XCJcbiAgICBocmVmPVwiaHR0cHM6Ly91bnBrZy5jb20vbGVhZmxldEAxLjkuNC9kaXN0L2xlYWZsZXQuY3NzXCJcbiAgLz5cbiAgPHNjcmlwdCBzcmM9XCJodHRwczovL3VucGtnLmNvbS9sZWFmbGV0QDEuOS40L2Rpc3QvbGVhZmxldC5qc1wiPjwvc2NyaXB0PlxuICA8ZGl2IGlkPVwibWFwXCIgc3R5bGU9XCJoZWlnaHQ6IDUwMHB4O1wiPjwvZGl2PmBcblxuICB5aWVsZCBjb250YWluZXJcblxuICBjb25zdCBtYXAgPSBMLm1hcCgnbWFwJyk7XG5cbiAgTC50aWxlTGF5ZXIoJ2h0dHBzOi8ve3N9LnRpbGUub3BlbnN0cmVldG1hcC5vcmcve3p9L3t4fS97eX0ucG5nJywge1xuICAgIGF0dHJpYnV0aW9uOiAnwqkgT3BlblN0cmVldE1hcCBjb250cmlidXRvcnMnXG4gIH0pLmFkZFRvKG1hcCk7XG5cbiAgY29uc3QgZ2VvTGF5ZXIgPSBMLmdlb0pTT04oZHZmX2dlb2pzb24sIHtcbiAgICBvbkVhY2hGZWF0dXJlOiAoZmVhdHVyZSwgbGF5ZXIpID0+IHtcbiAgICAgIGNvbnN0IHByb3BzID0gZmVhdHVyZS5wcm9wZXJ0aWVzO1xuICAgICAgY29uc3QgcG9wdXBDb250ZW50ID0gYFxuICAgICAgICA8c3Ryb25nPkRhdGU6PC9zdHJvbmc+ICR7cHJvcHMuZGF0ZX08YnI+XG4gICAgICAgIDxzdHJvbmc+VmFsZXVyIGZvbmNpw6hyZTo8L3N0cm9uZz4gJHtwcm9wcy52YWxldXJfZm9uY2llcmV9IOKCrDxicj5cbiAgICAgICAgPHN0cm9uZz5Db21tdW5lOjwvc3Ryb25nPiAke3Byb3BzLmNvZGVfY29tbXVuZX1cbiAgICAgIGA7XG4gICAgICBsYXllci5iaW5kUG9wdXAocG9wdXBDb250ZW50KTtcbiAgICB9XG4gIH0pLmFkZFRvKG1hcCk7XG5cbiAgLy8g8J+RhyBBdXRvbWF0aWNhbGx5IGZpdCB2aWV3IHRvIGFsbCBwb2ludHNcbiAgbWFwLmZpdEJvdW5kcyhnZW9MYXllci5nZXRCb3VuZHMoKSk7XG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTMiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ2aWV3b2Ygc2VhcmNoID0gSW5wdXRzLnNlbGVjdChjb2csIHtmb3JtYXQ6IHggPT4geC5MSUJFTExFLCB2YWx1ZTogY29nLmZpbmQodCA9PiB0LkxJQkVMTEUgPT0gXCJHcmFzc2VcIil9KVxuXG5jb2cgPSBkYi5xdWVyeShgU0VMRUNUICogRlJPTSByZWFkX2Nzdl9hdXRvKFwiaHR0cHM6Ly9taW5pby5sYWIuc3NwY2xvdWQuZnIvbGdhbGlhbmEvZGF0YS9weXRob24tRU5TQUUvY29nXzIwMjMuY3N2XCIpIFdIRVJFIERFUCA9PSAnMDYnYClcbmR2ZiA9IGRiLnF1ZXJ5KHF1ZXJ5KVxuXG5kYiA9IER1Y2tEQkNsaWVudC5vZih7fSlcblxucXVlcnkgPSBgXG4gIEZST00gcmVhZF9wYXJxdWV0KCdodHRwczovL21pbmlvLmxhYi5zc3BjbG91ZC5mci9wcm9qZXQtZm9ybWF0aW9uL25vdXZlbGxlcy1zb3VyY2VzL2RhdGEvZ2VvcGFycXVldC9kdmYucGFycXVldCcpXG4gIFNFTEVDVFxuICAgIENBU1QoZGF0ZV9tdXRhdGlvbiBBUyBkYXRlKSBBUyBkYXRlLFxuICAgIHZhbGV1cl9mb25jaWVyZSwgY29kZV9jb21tdW5lLFxuICAgIGxvbmdpdHVkZSwgbGF0aXR1ZGUsIHZhbGV1cl9mb25jaWVyZSBBUyB2YWxldXJfZm9uY2llcmVfYmFyXG4gIFdIRVJFIGNvZGVfY29tbXVuZSA9ICcke3NlYXJjaC5DT019J1xuYFxuXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTQiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ2aWV3b2YgdGFibGVfZHZmID0gSW5wdXRzLnRhYmxlKGR2Ziwge2NvbHVtbnM6IFtcImRhdGVcIiwgXCJ2YWxldXJfZm9uY2llcmVcIl0sIHJvd3M6IDE1fSlcblxucHJvZHVjZV9oaXN0byA9IGZ1bmN0aW9uKGR2Zil7XG4gIGNvbnN0IGhpc3RvID0gUGxvdC5wbG90KHtcbiAgc3R5bGU6IHtiYWNrZ3JvdW5kQ29sb3I6IFwidHJhbnNwYXJlbnRcIn0sXG4gIG1hcmtzOiBbXG4gICAgUGxvdC5yZWN0WShkdmYsIFBsb3QuYmluWCh7eTogXCJjb3VudFwifSwge3g6IFwidmFsZXVyX2ZvbmNpZXJlXCIsIGZpbGw6IFwiI2ZmNTYyY1wifSkpLFxuICAgIFBsb3QucnVsZVkoWzBdKVxuICBdXG59KVxuICByZXR1cm4gaGlzdG9cbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImR2Zl9nZW9qc29uID0ge1xuIFxuICBjb25zdCBnZW9qc29uID0ge1xuICAgIHR5cGU6IFwiRmVhdHVyZUNvbGxlY3Rpb25cIixcbiAgICBmZWF0dXJlczogZHZmLm1hcChyb3cgPT4gKHtcbiAgICAgIHR5cGU6IFwiRmVhdHVyZVwiLFxuICAgICAgZ2VvbWV0cnk6IHtcbiAgICAgICAgdHlwZTogXCJQb2ludFwiLFxuICAgICAgICBjb29yZGluYXRlczogW3Jvdy5sb25naXR1ZGUsIHJvdy5sYXRpdHVkZV0sXG4gICAgICB9LFxuICAgICAgcHJvcGVydGllczoge1xuICAgICAgICBkYXRlOiByb3cuZGF0ZSxcbiAgICAgICAgdmFsZXVyX2ZvbmNpZXJlOiByb3cudmFsZXVyX2ZvbmNpZXJlLFxuICAgICAgICBjb2RlX2NvbW11bmU6IHJvdy5jb2RlX2NvbW11bmUsXG4gICAgICAgIHZhbGV1cl9mb25jaWVyZV9iYXI6IHJvdy52YWxldXJfZm9uY2llcmVfYmFyLFxuICAgICAgfSxcbiAgICB9KSksXG4gIH07XG5cbiAgcmV0dXJuIGdlb2pzb25cbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnc2VhcmNoJykifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ3RhYmxlX2R2ZicpIn1dfQ==
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../..";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
