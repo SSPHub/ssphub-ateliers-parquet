@@ -612,3 +612,22 @@ dvf_geojson = {
 ```
 
 Que ce soit avec `Quarto` (comme ici) ou par le biais d'`Observable` (comme [là](https://observablehq.com/@linogaliana/atelier-parquet-ssphub)), il est donc possible de construire des applications interactives reposant sur des sites statiques, sans avoir besoin d'un serveur {{< fa brands r-project >}} ou {{< fa brands python >}}.
+
+
+# Références supplémentaires {-}
+
+Du contenu pédagogique supplémentaire sur le sujet, produit par l'Insee:
+
+- [La formation aux bonnes pratiques](https://inseefrlab.github.io/formation-bonnes-pratiques-git-R/) de l'Insee
+- Un atelier de l'EHESS sur `Parquet` avec de nombreux exemples [ici](https://linogaliana.github.io/parquet-recensement-tutomate/)
+- Le [cours de mise en production](https://ensae-reproductibilite.github.io/website/) de l'ENSAE
+
+D'autres références utiles, à consommer sans modération, sur le sujet:
+
+- Les posts d'Eric Mauvière sur [icem7.fr/](https://www.icem7.fr/)
+- [Webinaire du CASD](https://www.casd.eu/webinaire-casd-data-tech/) sur `Parquet` et `DuckDB`
+
+
+Une vidéo sur la philosophie derrière la naissance de `DuckDB` et sa relation avec `MotherDuck`: 
+
+{{< video https://www.youtube.com/watch?v=JH4Th2dFSUk >}}
